@@ -90,6 +90,11 @@ if(MSVC)
 else()
     set(X86_MMX_FLAGS "-mmmx -Winline")
 endif()
+if(${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+    set(USE_X86_MMX_MSVC ON)
+else()
+    set(USE_X86_MMX_MSVC OFF)
+endif()
 check_target_feature(
 "#if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
 #error Need GCC >= 3.4 for MMX intrinsics
@@ -127,7 +132,7 @@ int main () {
 }"
     "${X86_MMX_FLAGS}"
     USE_X86_MMX "Use x86 MMX compiler intrinsics"
-    MSVC ON)
+    MSVC ${USE_X86_MMX_MSVC})
 
 if(MSVC)
     set(SSE2_FLAGS "")

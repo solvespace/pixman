@@ -56,11 +56,13 @@ if(NOT MSVC)
 endif()
 
 if(NOT MSVC)
-	# Currently, OpenMP code cannot be built with MSVC; it fails with
-	# "utils.h:23: 'threadprivate' is only valid for global or static data items"
-	find_package(OpenMP)
-	set(USE_OPENMP ${OPENMP_FOUND})
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    # Currently, OpenMP code cannot be built with MSVC; it fails with
+    # "utils.h:23: 'threadprivate' is only valid for global or static data items"
+    find_package(OpenMP)
+    if(OPENMP_FOUND)
+       set(USE_OPENMP ${OPENMP_FOUND})
+       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    endif()
 endif()
 
 set(LOONGSON_MMI_FLAGS "-march=loongson2f")

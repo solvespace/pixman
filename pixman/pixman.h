@@ -880,6 +880,10 @@ typedef enum {
 /* 96bpp formats */
     PIXMAN_rgb_float =	PIXMAN_FORMAT_BYTE(96,PIXMAN_TYPE_RGBA_FLOAT,0,32,32,32),
 
+/* 64bpp formats */
+    /* [63:0] A:B:G:R 16:16:16:16 native endian */
+    PIXMAN_a16b16g16r16 = PIXMAN_FORMAT_BYTE(64,PIXMAN_TYPE_ABGR,16,16,16,16),
+
 /* 32bpp formats */
     PIXMAN_a8r8g8b8 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_ARGB,8,8,8,8),
     PIXMAN_x8r8g8b8 =	 PIXMAN_FORMAT(32,PIXMAN_TYPE_ARGB,0,8,8,8),

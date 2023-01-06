@@ -31,7 +31,8 @@ version_h = configure_file(
 )
 
 libpixman_extra_cargs = []
-if cc.has_function_attribute('dllexport')
+default_library = get_option('default_library')
+if default_library != 'static' and cc.has_function_attribute('dllexport')
   libpixman_extra_cargs = ['-DPIXMAN_API=__declspec(dllexport)']
 endif
 

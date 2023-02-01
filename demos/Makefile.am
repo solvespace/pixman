@@ -12,10 +12,10 @@ AM_CFLAGS = $(OPENMP_CFLAGS)
 AM_LDFLAGS = $(OPENMP_CFLAGS)
 
 LDADD = $(top_builddir)/pixman/libpixman-1.la -lm $(GTK_LIBS) $(PNG_LIBS)
-AM_CPPFLAGS = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman $(GTK_CFLAGS) $(PNG_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/pixman -I$(top_srcdir)/test/utils -I$(top_builddir)/pixman $(GTK_CFLAGS) $(PNG_CFLAGS)
 
-GTK_UTILS = gtk-utils.c gtk-utils.h ../test/utils.c ../test/utils.h \
-            ../test/utils-prng.c ../test/utils-prng.h
+GTK_UTILS = gtk-utils.c gtk-utils.h ../test/utils/utils.c ../test/utils/utils.h \
+            ../test/utils/utils-prng.c ../test/utils/utils-prng.h
 
 DEMOS =				\
 	clip-test		\

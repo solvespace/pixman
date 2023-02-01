@@ -46,11 +46,11 @@ OTHERPROGRAMS =                 \
 
 # Utility functions
 libutils_sources =		\
-	utils.c			\
-	utils-prng.c		\
+	utils/utils.c		\
+	utils/utils-prng.c	\
 	$(NULL)
 
 libutils_headers =		\
-	utils.h			\
-	utils-prng.h		\
+	utils/utils.h		\
+	utils/utils-prng.h	\
 	$(NULL)

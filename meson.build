@@ -412,8 +412,8 @@ else
   dep_openmp = null_dep
 endif
 
-dep_gtk = dependency('gtk+-3.0', required : get_option('gtk'))
-dep_glib = dependency('glib-2.0', required : get_option('gtk'))
+dep_gtk = dependency('gtk+-3.0', required : get_option('gtk'), required: get_option('demos'))
+dep_glib = dependency('glib-2.0', required : get_option('gtk'), required: get_option('demos'))
 
 dep_png = null_dep
 if not get_option('libpng').disabled()
@@ -559,9 +559,16 @@ add_project_arguments('-DHAVE_CONFIG_H', language : ['c'])
 
 subdir('pixman')
 
+if not get_option('tests').disabled() or not get_option('demos').disabled()
+  subdir(join_paths('test', 'utils'))
+endif
+
+if not get_option('demos').disabled()
+  subdir('demos')
+endif
+
 if not get_option('tests').disabled()
   subdir('test')
-  subdir('demos')
 endif
 
 pkg = import('pkgconfig')

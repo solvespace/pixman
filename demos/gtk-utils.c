@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 #include <config.h>
-#include "../test/utils.h"
+#include "utils.h"
 #include "gtk-utils.h"
 
 pixman_image_t *

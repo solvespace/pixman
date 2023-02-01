@@ -28,7 +28,7 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
-#include "../test/utils.h"
+#include "utils.h"
 #include "gtk-utils.h"
 
 #define WIDTH 1024

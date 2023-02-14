@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#include <pixman-config.h>
+#endif
 #include "utils.h"
 #include "gtk-utils.h"
 

@@ -20,7 +20,7 @@
 
 config_h = configure_file(
   configuration : config,
-  output : 'config.h'
+  output : 'pixman-config.h'
 )
 
 version_h = configure_file(

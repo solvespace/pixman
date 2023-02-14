@@ -64,7 +64,7 @@ AM_INIT_AUTOMAKE([foreign dist-xz])
 # Suppress verbose compile lines
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_HEADERS(pixman-config.h)
 
 AC_CANONICAL_HOST
 

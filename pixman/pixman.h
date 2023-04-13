@@ -1015,11 +1015,11 @@ void *		pixman_image_get_destroy_data        (pixman_image_t		   *image);
 /* Set properties */
 PIXMAN_API
 pixman_bool_t   pixman_image_set_clip_region         (pixman_image_t               *image,
-						      pixman_region16_t            *region);
+						      const pixman_region16_t            *region);
 
 PIXMAN_API
 pixman_bool_t   pixman_image_set_clip_region32       (pixman_image_t               *image,
-						      pixman_region32_t            *region);
+						      const pixman_region32_t            *region);
 
 PIXMAN_API
 void		pixman_image_set_has_client_clip     (pixman_image_t               *image,

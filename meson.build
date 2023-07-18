@@ -243,6 +243,34 @@ if not use_vmx.disabled()
   endif
 endif
 
+if cc.compiles('''
+    __asm__ (
+    ".func meson_test"
+    ".endfunc"
+    );''',
+    name : 'test for ASM .func directive')
+    config.set('ASM_HAVE_FUNC_DIRECTIVE', 1)    
+endif
+
+
+if cc.links('''
+    #include <stdint.h>
+
+    __asm__ (
+        "   .global _testlabel\n"
+        "_testlabel:\n"
+    );
+
+    int testlabel();
+    int main(int argc, char* argv[]) {
+        return testlabel();
+    }''',
+    name : 'test for ASM leading underscore')
+    config.set('ASM_LEADING_UNDERSCORE', 1)    
+endif
+
+
+
 if have_vmx
   config.set10('USE_VMX', true)
 elif use_vmx.enabled()

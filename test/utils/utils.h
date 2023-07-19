@@ -3,7 +3,7 @@
 #endif
 
 #include <assert.h>
-#include "pixman-compiler.h" /* For 'inline' definition */
+#include "pixman-private.h" /* For 'inline' definition */
 #include "utils-prng.h"
 
 #if defined(_MSC_VER)

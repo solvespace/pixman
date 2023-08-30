@@ -440,8 +440,8 @@ else
   dep_openmp = null_dep
 endif
 
-dep_gtk = dependency('gtk+-3.0', required : get_option('gtk'), required: get_option('demos'))
-dep_glib = dependency('glib-2.0', required : get_option('gtk'), required: get_option('demos'))
+dep_gtk = dependency('gtk+-3.0', required : get_option('gtk').enabled() and get_option('demos').enabled())
+dep_glib = dependency('glib-2.0', required : get_option('gtk').enabled() and get_option('demos').enabled())
 
 dep_png = null_dep
 if not get_option('libpng').disabled()

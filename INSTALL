@@ -11,8 +11,8 @@ Basic Installation
 ==================
 
 Briefly, the shell commands `meson setup build/; ninja -C build; ninja
--C build install' should configure, build, and install this package. The
-following more-detailed instructions are generic; see the `README' file
+-C build install` should configure, build, and install this package. The
+following more-detailed instructions are generic; see the `README` file
 for instructions specific to this package.
 
    Running `meson setup` attempts to guess correct values for various
@@ -20,19 +20,19 @@ system-dependent variables used during compilation.
 
 The simplest way to compile this package is:
 
-  1. `cd' to the directory containing the package's source code and type
-     `meson setup build/' to configure the package for your system.
+  1. `cd` to the directory containing the package's source code and type
+     `meson setup build/` to configure the package for your system.
 
      While running, it prints some messages telling which features it
      is checking for.
 
-  2. Type `ninja -C build' to compile the package.
+  2. Type `ninja -C build` to compile the package.
 
-  3. Optionally, type `ninja -C build test' to run any self-tests that
+  3. Optionally, type `ninja -C build test` to run any self-tests that
      come with the package.
 
-  4. Type `ninja -C build install' to install the programs and any
+  4. Type `ninja -C build install` to install the programs and any
      data files and documentation.
 
   5. You can remove the program binaries and object files from the
-     source code directory by typing `ninja -C build clean'.
+     source code directory by typing `ninja -C build clean`.

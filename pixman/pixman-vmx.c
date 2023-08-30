@@ -279,20 +279,9 @@ save_128_aligned (uint32_t* data,
 }
 
 static force_inline vector unsigned int
-create_mask_1x32_128 (const uint32_t *src)
-{
-    vector unsigned int vsrc;
-    DECLARE_SRC_MASK_VAR;
-
-    COMPUTE_SHIFT_MASK (src);
-    LOAD_VECTOR (src);
-    return vec_splat(vsrc, 0);
-}
-
-static force_inline vector unsigned int
 create_mask_32_128 (uint32_t mask)
 {
-    return create_mask_1x32_128(&mask);
+    return (vector unsigned int) {mask, mask, mask, mask};
 }
 
 static force_inline vector unsigned int
@@ -2471,7 +2460,7 @@ vmx_fill (pixman_implementation_t *imp,
 	return FALSE;
     }
 
-    vfiller = create_mask_1x32_128(&filler);
+    vfiller = create_mask_32_128(filler);
 
     while (height--)
     {

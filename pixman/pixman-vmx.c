@@ -2913,32 +2913,26 @@ scaled_nearest_scanline_vmx_8888_8888_OVER (uint32_t*       pd,
 
     while (w >= 4)
     {
-	vector unsigned int tmp;
-	uint32_t tmp1, tmp2, tmp3, tmp4;
+	uint32_t tmp[4];
 
-	tmp1 = *(ps + pixman_fixed_to_int (vx));
+	tmp[0] = *(ps + pixman_fixed_to_int (vx));
 	vx += unit_x;
 	while (vx >= 0)
 	    vx -= src_width_fixed;
-	tmp2 = *(ps + pixman_fixed_to_int (vx));
+	tmp[1] = *(ps + pixman_fixed_to_int (vx));
 	vx += unit_x;
 	while (vx >= 0)
 	    vx -= src_width_fixed;
-	tmp3 = *(ps + pixman_fixed_to_int (vx));
+	tmp[2] = *(ps + pixman_fixed_to_int (vx));
 	vx += unit_x;
 	while (vx >= 0)
 	    vx -= src_width_fixed;
-	tmp4 = *(ps + pixman_fixed_to_int (vx));
+	tmp[3] = *(ps + pixman_fixed_to_int (vx));
 	vx += unit_x;
 	while (vx >= 0)
 	    vx -= src_width_fixed;
 
-	tmp[0] = tmp1;
-	tmp[1] = tmp2;
-	tmp[2] = tmp3;
-	tmp[3] = tmp4;
-
-	vsrc = combine4 ((const uint32_t *) &tmp, pm);
+	vsrc = combine4 (tmp, pm);
 
 	if (is_opaque (vsrc))
 	{

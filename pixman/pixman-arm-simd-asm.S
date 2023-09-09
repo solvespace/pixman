@@ -25,11 +25,6 @@
  *
  */
 
-#ifdef __clang__
-#define adceqs adcseq
-#define ldmnedb ldmdbne
-#endif
-
 /* Prevent the stack from becoming executable */
 #if defined(__linux__) && defined(__ELF__)
 .section .note.GNU-stack,"",%progbits
@@ -44,6 +39,8 @@
 
 #include "pixman-arm-asm.h"
 #include "pixman-arm-simd-asm.h"
+
+	pixman_syntax_unified
 
 /* A head macro should do all processing which results in an output of up to
  * 16 bytes, as far as the final load instruction. The corresponding tail macro
@@ -127,7 +124,7 @@ generate_composite_function \
 
 .macro src_n_0565_init
         ldrh    SRC, [sp, #ARGS_STACK_OFFSET]
-        orr     SRC, SRC, lsl #16
+        orr     SRC, SRC, SRC, lsl #16
         mov     STRIDE_S, SRC
         mov     MASK, SRC
         mov     STRIDE_M, SRC
@@ -135,8 +132,8 @@ generate_composite_function \
 
 .macro src_n_8_init
         ldrb    SRC, [sp, #ARGS_STACK_OFFSET]
-        orr     SRC, SRC, lsl #8
-        orr     SRC, SRC, lsl #16
+        orr     SRC, SRC, SRC, lsl #8
+        orr     SRC, SRC, SRC, lsl #16
         mov     STRIDE_S, SRC
         mov     MASK, SRC
         mov     STRIDE_M, SRC
@@ -1098,13 +1095,13 @@ generate_composite_function \
  .elseif \numbytes == 8
         teq     ORIG_W, WK\()\reg1
         teqeq   ORIG_W, ORIG_W, asr #32  /* all 0 or all -1? */
-        ldmnedb DST, {WK\()\reg1-WK\()\reg2}
+        ldmdbne DST, {WK\()\reg1-WK\()\reg2}
  .else
         teq     ORIG_W, WK\()\reg1
         teqeq   ORIG_W, WK\()\reg2
         teqeq   ORIG_W, WK\()\reg3
         teqeq   ORIG_W, ORIG_W, asr #32  /* all 0 or all -1? */
-        ldmnedb DST, {WK\()\reg1-WK\()\reg4}
+        ldmdbne DST, {WK\()\reg1-WK\()\reg4}
  .endif
         cmnne   DST, #0   /* clear C if NE */
         bcs     49f       /* no writes to dest if source all -1 */

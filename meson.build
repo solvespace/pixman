@@ -485,6 +485,9 @@ if dep_threads.found() and cc.has_header('pthread.h')
   else
     pthreads_found = true
   endif
+else
+  # Avoid linking with -pthread if we don't actually have pthreads
+  dep_threads = null_dep
 endif
 
 if pthreads_found

@@ -22,7 +22,7 @@
 #ifdef HAVE_CONFIG_H
 #include <pixman-config.h>
 #endif
-#include <cpuid.h>
+
 #include "pixman-private.h"
 
 #if defined(USE_X86_MMX) || defined (USE_SSE2) || defined (USE_SSSE3)
@@ -73,6 +73,10 @@ detect_cpu_features (void)
 }
 
 #else
+
+#if defined (__GNUC__)
+#include <cpuid.h>
+#endif
 
 static void
 pixman_cpuid (uint32_t feature,

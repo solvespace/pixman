@@ -25,6 +25,8 @@
  *
  */
 
+#ifndef PIXMAN_ARM_ASM_H
+#define PIXMAN_ARM_ASM_H
 
 #include "pixman-config.h"
 
@@ -61,3 +63,5 @@
 	.endfunc
 #endif
 .endm
+
+#endif /* PIXMAN_ARM_ASM_H */

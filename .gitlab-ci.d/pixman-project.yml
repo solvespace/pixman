@@ -1,0 +1,47 @@
+# This file contains the set of jobs run by the pixman project:
+# https://gitlab.freedesktop.org/pixman/pixman/-/pipelines
+
+stages:
+  - docker
+
+variables:
+  # Make it possible to change RUNNER_TAG from GitLab variables. The default
+  # `kvm` tag has been tested with FDO infrastructure.
+  RUNNER_TAG: kvm
+
+  # Docker image global configuration.
+  DOCKER_TAG: latest
+  DOCKER_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/pixman:${DOCKER_TAG}
+
+workflow:
+  rules:
+    # Use modified Docker image if building in MR and Docker image is affected
+    # by the MR.
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        paths:
+          - .gitlab-ci.d/01-docker.yml
+          - .gitlab-ci.d/01-docker/
+      variables:
+        DOCKER_TAG: $CI_COMMIT_REF_SLUG
+
+    # A standard set of GitLab CI triggers (i.e., MR, schedule, default branch,
+    # and tag).
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'schedule'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+default:
+  tags:
+    - $RUNNER_TAG
+
+  # Retry in case the runner is misconfigured for multi-arch builds or some
+  # random unexpected runner error occurs (it happened during testing).
+  retry: 1
+
+include:
+  - local: "/.gitlab-ci.d/01-docker.yml"

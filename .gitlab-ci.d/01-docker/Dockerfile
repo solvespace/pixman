@@ -1,0 +1,39 @@
+ARG BASE_IMAGE=docker.io/debian
+# Debian Sid is requried for official riscv64 support.
+ARG BASE_IMAGE_TAG=sid-slim
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
+
+LABEL org.opencontainers.image.title="Pixman build environment" \
+      org.opencontainers.image.authors="Marek Pikuła <m.pikula@partner.samsung.com>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    # Install build dependencies.
+    && apt-get install -y --no-install-recommends \
+        # Build dependencies
+        build-essential \
+        libglib2.0-dev \
+        libgtk-3-dev \
+        libpng-dev \
+        meson \
+        pkg-config \
+        # pipx and gcovr dependencies
+        libxml2-dev \
+        libxslt-dev \
+        python3-argcomplete \
+        python3-dev \
+        python3-packaging \
+        python3-pip \
+        python3-platformdirs \
+        python3-userpath \
+        python3-venv \
+    # Clean up after apt.
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+    # Install pipx using pip to have the more recent version which supports the
+    # `--global` flag.
+    && pip install pipx --break-system-packages \
+    # Install gcovr using pipx to have the same version on all installations.
+    && pipx ensurepath --global \
+    && pipx install --global gcovr \
+    # Check gcovr version.
+    && gcovr --version

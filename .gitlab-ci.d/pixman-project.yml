@@ -3,6 +3,9 @@
 
 stages:
   - docker
+  - build
+  - test
+  - summary
 
 variables:
   # Make it possible to change RUNNER_TAG from GitLab variables. The default
@@ -12,6 +15,17 @@ variables:
   # Docker image global configuration.
   DOCKER_TAG: latest
   DOCKER_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/pixman:${DOCKER_TAG}
+
+  # Enable/disable specific platforms.
+  PLATFORM_LINUX_386: true
+  PLATFORM_LINUX_AMD64: true
+  PLATFORM_LINUX_ARM_V5: true
+  PLATFORM_LINUX_ARM_V7: true
+  PLATFORM_LINUX_ARM64_V8: true
+  PLATFORM_LINUX_MIPS64EL: true
+  PLATFORM_LINUX_MIPSEL: true
+  PLATFORM_LINUX_PPC64LE: true
+  PLATFORM_LINUX_RISCV64: true
 
 workflow:
   rules:
@@ -44,4 +58,8 @@ default:
   retry: 1
 
 include:
+  - local: "/.gitlab-ci.d/platform-templates.yml"
   - local: "/.gitlab-ci.d/01-docker.yml"
+  - local: "/.gitlab-ci.d/02-build.yml"
+  - local: "/.gitlab-ci.d/03-test.yml"
+  - local: "/.gitlab-ci.d/04-summary.yml"

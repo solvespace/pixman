@@ -1,0 +1,143 @@
+# Test stage
+#
+# This stage executes the test suite for pixman for all architectures in
+# different configurations. Build and test is split, as some architectures can
+# have different QEMU configuration or have multiple supported pixman backends,
+# which are executed as job matrix.
+#
+# Mind that `PIXMAN_ENABLE` variable in matrix runs does nothing, but it looks
+# better in CI to indicate what is actually being tested.
+#
+# Some emulated targets are really slow or cannot be run in multithreaded mode
+# (e.g., arm:v5), thus it's required to increase the timeout for them.
+#
+# Some jobs have `--gcov-ignore-parse-errors`, and `MESON_TESTTHREADS=1`
+# specified. It prevents gcovr failing in case of negative counter warning for
+# platforms which don't support atomic profile update. Because of that, some
+# results might be not 100% correct but, still, it's better to include them in
+# the final coverage report, as it's not really important how many times given
+# line is hit, but that it's hit at all.
+
+variables:
+  # Used in summary stage as well.
+  COVERAGE_OUT_DIR: ${BUILD_DIR}/coverage
+  COVERAGE_HTML_OUT_DIR: ${COVERAGE_OUT_DIR}/html
+
+.test:linux:
+  stage: test
+  variables:
+    TEST_TIMEOUT_MULTIPLIER: 20
+    TEST_NAME: ""  # Allow to specify a set of tests to run with run variables.
+  script:
+    - mkdir -p ${COVERAGE_OUT_DIR} ${COVERAGE_HTML_OUT_DIR}
+    - meson test -C ${BUILD_DIR} -t ${TEST_TIMEOUT_MULTIPLIER}
+        --no-rebuild ${TEST_NAME}
+  after_script:
+    - gcovr ${QCOVR_FLAGS} -r ./ ${BUILD_DIR} -e ./subprojects
+        --json ${COVERAGE_OUT_DIR}/coverage-${CI_JOB_ID}.json
+        --html-details ${COVERAGE_HTML_OUT_DIR}/coverage.html
+        --print-summary
+  artifacts:
+    paths:
+      - ${COVERAGE_OUT_DIR}/
+    reports:
+      junit: ${BUILD_DIR}/meson-logs/testlog.junit.xml
+
+test:linux:386:
+  extends:
+    - .test:linux
+    - .platform:linux:386
+  needs:
+    - build:linux:386
+  parallel:
+    matrix:
+      - PIXMAN_ENABLE: ["mmx"]
+        PIXMAN_DISABLE: ["sse2 ssse3"]
+      - PIXMAN_ENABLE: ["sse2"]
+        PIXMAN_DISABLE: ["mmx ssse3"]
+      - PIXMAN_ENABLE: ["ssse3"]
+        PIXMAN_DISABLE: ["mmx sse2"]
+
+test:linux:amd64:
+  extends:
+    - .test:linux
+    - .platform:linux:amd64
+  needs:
+    - build:linux:amd64
+  parallel:
+    matrix:
+      - PIXMAN_DISABLE:
+        - ""
+        - "fast"
+        - "wholeops"
+
+test:linux:arm:v5:
+  extends:
+    - .test:linux
+    - .platform:linux:arm:v5
+  needs:
+    - build:linux:arm:v5
+  timeout: 3h
+  variables:
+    TEST_TIMEOUT_MULTIPLIER: 40
+    PIXMAN_DISABLE: "arm-neon arm-iwmmxt"  # Test only arm-simd.
+    MESON_TESTTHREADS: 1
+    QCOVR_FLAGS: --gcov-ignore-parse-errors
+
+test:linux:arm:v7:
+  extends:
+    - .test:linux
+    - .platform:linux:arm:v7
+  needs:
+    - build:linux:arm:v7
+
+test:linux:arm64:v8:
+  extends:
+    - .test:linux
+    - .platform:linux:arm64:v8
+  needs:
+    - build:linux:arm64:v8
+
+test:linux:mips64el:
+  extends:
+    - .test:linux
+    - .platform:linux:mips64el
+  needs:
+    - build:linux:mips64el
+  variables:
+    # Testing only loongson-mmi. Needs to be explicitly disabled due to
+    # CI_HAS_ALL_MIPS_CPU_FEATURES.
+    PIXMAN_DISABLE: "mips-dspr2"
+
+test:linux:mipsel:
+  extends:
+    - .test:linux
+    - .platform:linux:mipsel
+  needs:
+    - build:linux:mipsel
+  timeout: 2h
+  variables:
+    MESON_TESTTHREADS: 1
+    QCOVR_FLAGS: --gcov-ignore-parse-errors
+
+test:linux:ppc64le:
+  extends:
+    - .test:linux
+    - .platform:linux:ppc64le
+  needs:
+    - build:linux:ppc64le
+
+test:linux:riscv64:
+  extends:
+    - .test:linux
+    - .platform:linux:riscv64
+  needs:
+    - build:linux:riscv64
+  parallel:
+    matrix:
+      # Test correctness for different VLENs.
+      - QEMU_CPU:
+          - rv64,v=true,vext_spec=v1.0,vlen=128,elen=64
+          - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
+          - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
+          - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64

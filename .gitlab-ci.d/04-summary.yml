@@ -1,0 +1,34 @@
+# Summary stage
+#
+# This stage takes coverage reports from test runs for all architectures, and
+# merges it into a single report, with GitLab visualization. There is also an
+# HTML report generated as a separate artifact.
+
+summary:
+  stage: summary
+  image:
+    name: $DOCKER_IMAGE_NAME-linux-amd64
+    docker:
+      platform: linux/amd64
+  script:
+    - echo "Input coverage reports:" && ls ${COVERAGE_OUT_DIR}/coverage-*.json
+    - |
+      args=( )
+      for f in ${COVERAGE_OUT_DIR}/coverage-*.json; do
+        args+=( "-a" "$f" )
+      done
+    # Recreate the output directory, so that new artifacts don't mix with
+    # arch-specific HTML outputs.
+    - rm -fr ${COVERAGE_HTML_OUT_DIR} && mkdir -p ${COVERAGE_HTML_OUT_DIR}
+    - gcovr "${args[@]}"
+        --cobertura-pretty --cobertura ${COVERAGE_OUT_DIR}/coverage.xml
+        --html-details ${COVERAGE_HTML_OUT_DIR}/coverage.html
+        --txt --print-summary
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: ${COVERAGE_OUT_DIR}/coverage.xml
+    paths:
+      - ${COVERAGE_OUT_DIR}/

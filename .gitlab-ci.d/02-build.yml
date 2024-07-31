@@ -1,0 +1,78 @@
+# Build stage
+#
+# This stage builds pixman with enabled coverage for all supported
+# architectures.
+#
+# Some targets don't support atomic profile update, so to decrease the number of
+# gcov errors, they need to be built without OpenMP (single threaded) by adding
+# `-Dopenmp=disabled` Meson argument.
+
+variables:
+  # Used in test stage as well.
+  BUILD_DIR: build
+
+.build:linux:
+  stage: build
+  variables:
+    MESON_ARGS: ""
+    EXTRA_C_ARGS: ""
+  script:
+    - meson setup ${BUILD_DIR}
+        -Db_coverage=true
+        -Dc_args="-fprofile-update=atomic -DCI_HAS_ALL_MIPS_CPU_FEATURES ${EXTRA_C_ARGS}"
+        ${MESON_ARGS}
+    - meson compile -C ${BUILD_DIR}
+  artifacts:
+    paths:
+      - ${BUILD_DIR}/
+
+build:linux:386:
+  extends:
+    - .build:linux
+    - .platform:linux:386
+
+build:linux:amd64:
+  extends:
+    - .build:linux
+    - .platform:linux:amd64
+
+build:linux:arm:v5:
+  extends:
+    - .build:linux
+    - .platform:linux:arm:v5
+  variables:
+    MESON_ARGS: -Dopenmp=disabled
+
+build:linux:arm:v7:
+  extends:
+    - .build:linux
+    - .platform:linux:arm:v7
+
+build:linux:arm64:v8:
+  extends:
+    - .build:linux
+    - .platform:linux:arm64:v8
+
+build:linux:mips64el:
+  extends:
+    - .build:linux
+    - .platform:linux:mips64el
+
+build:linux:mipsel:
+  extends:
+    - .build:linux
+    - .platform:linux:mipsel
+  variables:
+    MESON_ARGS: -Dopenmp=disabled
+
+build:linux:ppc64le:
+  extends:
+    - .build:linux
+    - .platform:linux:ppc64le
+
+build:linux:riscv64:
+  extends:
+    - .build:linux
+    - .platform:linux:riscv64
+  variables:
+    EXTRA_C_ARGS: "-march=rv64gcv"

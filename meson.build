@@ -336,7 +336,7 @@ use_mips_dspr2 = get_option('mips-dspr2')
 have_mips_dspr2 = false
 mips_dspr2_flags = ['-mdspr2']
 if not use_mips_dspr2.disabled()
-  if host_machine.cpu_family() == 'mips32'
+  if host_machine.cpu_family().startswith('mips')
     if cc.compiles('''
         #if !(defined(__mips__) &&  __mips_isa_rev >= 2)
         #error MIPS DSPr2 is currently only available on MIPS32r2 platforms.

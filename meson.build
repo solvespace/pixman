@@ -352,7 +352,7 @@ if not use_mips_dspr2.disabled()
             );
             return c;
         }''',
-        args : mipds_dspr2_flags,
+        args : mips_dspr2_flags,
         name : 'DSPr2 Intrinsic Support')
       have_mips_dspr2 = true
     endif

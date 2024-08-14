@@ -23,16 +23,21 @@ variables:
   COVERAGE_OUT_DIR: ${BUILD_DIR}/coverage
   COVERAGE_HTML_OUT_DIR: ${COVERAGE_OUT_DIR}/html
 
-.test:linux:
+.test:all:
   stage: test
   variables:
     TEST_TIMEOUT_MULTIPLIER: 20
     TEST_NAME: ""  # Allow to specify a set of tests to run with run variables.
   script:
-    - mkdir -p ${COVERAGE_OUT_DIR} ${COVERAGE_HTML_OUT_DIR}
     - meson test -C ${BUILD_DIR} -t ${TEST_TIMEOUT_MULTIPLIER}
         --no-rebuild ${TEST_NAME}
+
+# Code coverage targets.
+
+.codecov-test:linux:
+  extends: .test:all
   after_script:
+    - mkdir -p ${COVERAGE_OUT_DIR} ${COVERAGE_HTML_OUT_DIR}
     - gcovr ${QCOVR_FLAGS} -r ./ ${BUILD_DIR} -e ./subprojects
         --json ${COVERAGE_OUT_DIR}/coverage-${CI_JOB_ID}.json
         --html-details ${COVERAGE_HTML_OUT_DIR}/coverage.html
@@ -43,12 +48,12 @@ variables:
     reports:
       junit: ${BUILD_DIR}/meson-logs/testlog.junit.xml
 
-test:linux:386:
+codecov-test:linux:386:
   extends:
-    - .test:linux
-    - .platform:linux:386
+    - .codecov-test:linux
+    - .codecov:linux:386
   needs:
-    - build:linux:386
+    - codecov-build:linux:386
   parallel:
     matrix:
       - PIXMAN_ENABLE: ["mmx"]
@@ -58,12 +63,12 @@ test:linux:386:
       - PIXMAN_ENABLE: ["ssse3"]
         PIXMAN_DISABLE: ["mmx sse2"]
 
-test:linux:amd64:
+codecov-test:linux:amd64:
   extends:
-    - .test:linux
-    - .platform:linux:amd64
+    - .codecov-test:linux
+    - .codecov:linux:amd64
   needs:
-    - build:linux:amd64
+    - codecov-build:linux:amd64
   parallel:
     matrix:
       - PIXMAN_DISABLE:
@@ -71,12 +76,12 @@ test:linux:amd64:
         - "fast"
         - "wholeops"
 
-test:linux:arm:v5:
+codecov-test:linux:arm:v5:
   extends:
-    - .test:linux
-    - .platform:linux:arm:v5
+    - .codecov-test:linux
+    - .codecov:linux:arm:v5
   needs:
-    - build:linux:arm:v5
+    - codecov-build:linux:arm:v5
   timeout: 3h
   variables:
     TEST_TIMEOUT_MULTIPLIER: 40
@@ -84,55 +89,55 @@ test:linux:arm:v5:
     MESON_TESTTHREADS: 1
     QCOVR_FLAGS: --gcov-ignore-parse-errors
 
-test:linux:arm:v7:
+codecov-test:linux:arm:v7:
   extends:
-    - .test:linux
-    - .platform:linux:arm:v7
+    - .codecov-test:linux
+    - .codecov:linux:arm:v7
   needs:
-    - build:linux:arm:v7
+    - codecov-build:linux:arm:v7
 
-test:linux:arm64:v8:
+codecov-test:linux:arm64:v8:
   extends:
-    - .test:linux
-    - .platform:linux:arm64:v8
+    - .codecov-test:linux
+    - .codecov:linux:arm64:v8
   needs:
-    - build:linux:arm64:v8
+    - codecov-build:linux:arm64:v8
 
-test:linux:mips64el:
+codecov-test:linux:mips64el:
   extends:
-    - .test:linux
-    - .platform:linux:mips64el
+    - .codecov-test:linux
+    - .codecov:linux:mips64el
   needs:
-    - build:linux:mips64el
+    - codecov-build:linux:mips64el
   variables:
     # Testing only loongson-mmi. Needs to be explicitly disabled due to
     # CI_HAS_ALL_MIPS_CPU_FEATURES.
     PIXMAN_DISABLE: "mips-dspr2"
 
-test:linux:mipsel:
+codecov-test:linux:mipsel:
   extends:
-    - .test:linux
-    - .platform:linux:mipsel
+    - .codecov-test:linux
+    - .codecov:linux:mipsel
   needs:
-    - build:linux:mipsel
+    - codecov-build:linux:mipsel
   timeout: 2h
   variables:
     MESON_TESTTHREADS: 1
     QCOVR_FLAGS: --gcov-ignore-parse-errors
 
-test:linux:ppc64le:
+codecov-test:linux:ppc64le:
   extends:
-    - .test:linux
-    - .platform:linux:ppc64le
+    - .codecov-test:linux
+    - .codecov:linux:ppc64le
   needs:
-    - build:linux:ppc64le
+    - codecov-build:linux:ppc64le
 
-test:linux:riscv64:
+codecov-test:linux:riscv64:
   extends:
-    - .test:linux
-    - .platform:linux:riscv64
+    - .codecov-test:linux
+    - .codecov:linux:riscv64
   needs:
-    - build:linux:riscv64
+    - codecov-build:linux:riscv64
   parallel:
     matrix:
       # Test correctness for different VLENs.
@@ -141,3 +146,73 @@ test:linux:riscv64:
           - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
           - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
           - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64
+
+# Platform coverage targets.
+
+pltcov-test:linux:mips:
+  extends:
+    - .test:all
+    - .pltcov:linux:mips
+  needs:
+    - job: pltcov-build:linux
+      parallel:
+        matrix:
+          - PLATFORM: linux-mips
+  allow_failure: true  # Some tests seem to fail.
+  retry: 0
+
+pltcov-test:linux:ppc:
+  extends:
+    - .test:all
+    - .pltcov:linux:ppc
+  needs:
+    - job: pltcov-build:linux
+      parallel:
+        matrix:
+          - PLATFORM: linux-ppc
+  allow_failure: true  # SIGILL for some tests
+  retry: 0
+
+pltcov-test:linux:ppc64:
+  extends:
+    - .test:all
+    - .pltcov:linux:ppc64
+  needs:
+    - job: pltcov-build:linux
+      parallel:
+        matrix:
+          - PLATFORM: linux-ppc64
+
+pltcov-test:windows:386:
+  extends:
+    - .test:all
+    - .pltcov:windows:386
+  needs:
+    - job: pltcov-build:windows
+      parallel:
+        matrix:
+          - PLATFORM: windows-386
+  parallel:
+    matrix:
+      - PIXMAN_ENABLE: ["mmx"]
+        PIXMAN_DISABLE: ["sse2 ssse3"]
+      - PIXMAN_ENABLE: ["sse2"]
+        PIXMAN_DISABLE: ["mmx ssse3"]
+      - PIXMAN_ENABLE: ["ssse3"]
+        PIXMAN_DISABLE: ["mmx sse2"]
+
+pltcov-test:windows:amd64:
+  extends:
+    - .test:all
+    - .pltcov:windows:amd64
+  needs:
+    - job: pltcov-build:windows
+      parallel:
+        matrix:
+          - PLATFORM: windows-amd64
+  parallel:
+    matrix:
+      - PIXMAN_DISABLE:
+        - ""
+        - "fast"
+        - "wholeops"

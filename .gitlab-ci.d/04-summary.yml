@@ -10,6 +10,25 @@ summary:
     name: $DOCKER_IMAGE_NAME-linux-amd64
     docker:
       platform: linux/amd64
+  needs:
+    - job: codecov-test:linux:386
+      optional: true
+    - job: codecov-test:linux:amd64
+      optional: true
+    - job: codecov-test:linux:arm:v5
+      optional: true
+    - job: codecov-test:linux:arm:v7
+      optional: true
+    - job: codecov-test:linux:arm64:v8
+      optional: true
+    - job: codecov-test:linux:mips64el
+      optional: true
+    - job: codecov-test:linux:mipsel
+      optional: true
+    - job: codecov-test:linux:ppc64le
+      optional: true
+    - job: codecov-test:linux:riscv64
+      optional: true
   script:
     - echo "Input coverage reports:" && ls ${COVERAGE_OUT_DIR}/coverage-*.json
     - |

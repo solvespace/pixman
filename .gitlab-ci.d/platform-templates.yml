@@ -1,19 +1,25 @@
 # Platform templates
 #
 # Used to provide base for multi-arch runs. Each platform can be globally
-# disabled with `PLATFORM_LINUX_...` variable. Some targets have pre-defined
-# `QEMU_CPU`, which is either the only or the default QEMU configuration for a
-# given platform.
+# disabled with by modifying ACTIVE_CODE/PLT_PATTERN variables. Some targets
+# have pre-defined `QEMU_CPU`, which is either the only or the default QEMU
+# configuration for a given platform.
+#
+# There are two types of targets:
+# - code – it is used to perform code coverage test.
+# - plt – it is used to perform additional platform coverage test for
+#   architectures, which don't have official Debian support, and don't increase
+#   the code coverage.
 
-.platform:all:
+.codecov:all:
   rules:
     - if: "$PLATFORM =~ $ACTIVE_CODE_PATTERN"
   image:
     name: $DOCKER_IMAGE_NAME-$PLATFORM
 
 # i386 is used for `mmx`, `sse2` and `ssse3` backend tests.
-.platform:linux:386:
-  extends: .platform:all
+.codecov:linux:386:
+  extends: .codecov:all
   # Waiting for https://gitlab.com/gitlab-org/gitlab/-/issues/423553
   needs:
     - job: docker-codecov
@@ -25,8 +31,8 @@
     PLATFORM: linux-386
 
 # amd64 is used for general tests.
-.platform:linux:amd64:
-  extends: .platform:all
+.codecov:linux:amd64:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -37,8 +43,8 @@
     PLATFORM: linux-amd64
 
 # ARMv5 is used for `arm-simd` test.
-.platform:linux:arm:v5:
-  extends: .platform:all
+.codecov:linux:arm:v5:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -52,8 +58,8 @@
     QEMU_CPU: arm1136
 
 # ARMv7 is used for ARMv7 variant of `arm-neon`.
-.platform:linux:arm:v7:
-  extends: .platform:all
+.codecov:linux:arm:v7:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -64,8 +70,8 @@
     PLATFORM: linux-arm-v7
 
 # ARM64v8 is used for `arm-neon`.
-.platform:linux:arm64:v8:
-  extends: .platform:all
+.codecov:linux:arm64:v8:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -76,8 +82,8 @@
     PLATFORM: linux-arm64-v8
 
 # MIPS64EL used for `loongson-mmi`.
-.platform:linux:mips64el:
-  extends: .platform:all
+.codecov:linux:mips64el:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -89,8 +95,8 @@
     QEMU_CPU: "Loongson-3A4000"
 
 # MIPS (32 bit, little endian) is used for `mips-dspr2`.
-.platform:linux:mipsel:
-  extends: .platform:all
+.codecov:linux:mipsel:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -103,8 +109,8 @@
     QEMU_CPU: 74Kf
 
 # PPC64LE used for `vmx`.
-.platform:linux:ppc64le:
-  extends: .platform:all
+.codecov:linux:ppc64le:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -115,8 +121,8 @@
     PLATFORM: linux-ppc64le
 
 # RISCV64 used for `rvv`.
-.platform:linux:riscv64:
-  extends: .platform:all
+.codecov:linux:riscv64:
+  extends: .codecov:all
   needs:
     - job: docker-codecov
       optional: true
@@ -126,3 +132,57 @@
   variables:
     PLATFORM: linux-riscv64
     QEMU_CPU: rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
+
+# Platform coverage targets (Linux).
+
+.pltcov:all:
+  rules:
+    - if: "$PLATFORM =~ $ACTIVE_PLT_PATTERN"
+
+.pltcov:linux:
+  extends: .pltcov:all
+  needs:
+    - job: docker-pltcov:linux
+      optional: true
+  image:
+    name: $DOCKER_IMAGE_NAME-pltcov-linux
+
+# MIPS (32 bit, big endian) used for `mips-dspr2`.
+.pltcov:linux:mips:
+  extends: .pltcov:linux
+  variables:
+    PLATFORM: linux-mips
+
+# PPC (32 bit, big endian) used for `vmx`.
+.pltcov:linux:ppc:
+  extends: .pltcov:linux
+  variables:
+    PLATFORM: linux-ppc
+
+# PPC64 (64 bit, big endian) used for `vmx`.
+.pltcov:linux:ppc64:
+  extends: .pltcov:linux
+  variables:
+    PLATFORM: linux-ppc64
+
+# Platform coverage targets (Windows).
+
+.pltcov:windows:
+  extends: .pltcov:all
+  needs:
+    - job: docker-pltcov:windows
+      optional: true
+  image:
+    name: $DOCKER_IMAGE_NAME-pltcov-windows
+
+# Windows i386
+.pltcov:windows:386:
+  extends: .pltcov:windows
+  variables:
+    PLATFORM: windows-386
+
+# Windows amd64
+.pltcov:windows:amd64:
+  extends: .pltcov:windows
+  variables:
+    PLATFORM: windows-amd64

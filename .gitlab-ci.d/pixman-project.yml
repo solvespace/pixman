@@ -16,16 +16,8 @@ variables:
   DOCKER_TAG: latest
   DOCKER_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/pixman:${DOCKER_TAG}
 
-  # Enable/disable specific platforms.
-  PLATFORM_LINUX_386: true
-  PLATFORM_LINUX_AMD64: true
-  PLATFORM_LINUX_ARM_V5: true
-  PLATFORM_LINUX_ARM_V7: true
-  PLATFORM_LINUX_ARM64_V8: true
-  PLATFORM_LINUX_MIPS64EL: true
-  PLATFORM_LINUX_MIPSEL: true
-  PLATFORM_LINUX_PPC64LE: true
-  PLATFORM_LINUX_RISCV64: true
+  # Enable/disable specific platforms for code coverage targets.
+  ACTIVE_CODE_PATTERN: '/linux-386|linux-amd64|linux-arm-v5|linux-arm-v7|linux-arm64-v8|linux-mips64el|linux-mipsel|linux-ppc64le|linux-riscv64/i'
 
 workflow:
   rules:

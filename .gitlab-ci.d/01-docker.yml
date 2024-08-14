@@ -4,7 +4,7 @@
 # later easily used with properly configured Docker (which uses binfmt and QEMU
 # underneath).
 
-docker-pixman:
+.docker:
   stage: docker
   image: quay.io/buildah/stable
   rules:
@@ -45,30 +45,35 @@ docker-pixman:
     - echo "${DOCKERHUB_PASSWORD}" |
         buildah login -u "${DOCKERHUB_USER}" --password-stdin docker.io ||
           echo "Failed to login to Docker Hub."
+
+docker-pixman:
+  extends: .docker
   parallel:
     matrix:
       - PLATFORM:
-        - linux/386
-        - linux/amd64
-        - linux/arm/v5
-        - linux/arm/v7
-        - linux/arm64/v8
-        - linux/mips64el
-        - linux/mipsel
-        - linux/ppc64le
-        - linux/riscv64
+        - linux-386
+        - linux-amd64
+        - linux-arm-v5
+        - linux-arm-v7
+        - linux-arm64-v8
+        - linux-mips64el
+        - linux-mipsel
+        - linux-ppc64le
+        - linux-riscv64
+  rules:
+    - if: $PLATFORM =~ $ACTIVE_CODE_PATTERN
   script:
     # Prepare environment.
-    - BASE_IMAGE=$(${PLT_LOOKUP} ${PLATFORM} 2 ${PLT_TBL})
-    - BASE_IMAGE_TAG=$(${PLT_LOOKUP} ${PLATFORM} 3 ${PLT_TBL})
-    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-$(echo ${PLATFORM} | sed "s|/|-|g")
+    - BASE_IMAGE=$(${PLT_LOOKUP} ${PLATFORM} 3 ${PLT_TBL})
+    - BASE_IMAGE_TAG=$(${PLT_LOOKUP} ${PLATFORM} 4 ${PLT_TBL})
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-${PLATFORM}
 
     # Build and push the image.
     - buildah bud
         --tag ${FULL_IMAGE_NAME}
         --layers
         ${CACHE_ARGS}
-        --platform=${PLATFORM}
+        --platform=$(${PLT_LOOKUP} ${PLATFORM} 2 ${PLT_TBL})
         --build-arg BASE_IMAGE=${BASE_IMAGE}
         --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
         -f Dockerfile .gitlab-ci.d/01-docker/

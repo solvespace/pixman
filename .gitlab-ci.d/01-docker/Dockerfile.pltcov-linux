@@ -1,0 +1,20 @@
+ARG BASE_IMAGE=docker.io/debian
+# Debian Sid is requried for official riscv64 support.
+ARG BASE_IMAGE_TAG=bookworm-slim
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
+
+LABEL org.opencontainers.image.title="Pixman build environment for platform coverage (Linux targets)" \
+      org.opencontainers.image.authors="Marek Pikuła <m.pikula@partner.samsung.com>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    # Install build dependencies.
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc-multilib-mips-linux-gnu \
+        gcc-multilib-powerpc-linux-gnu \
+        gcc-multilib-powerpc64-linux-gnu \
+        meson \
+        qemu-user \
+    # Clean up after apt.
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*

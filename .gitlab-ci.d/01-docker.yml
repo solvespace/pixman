@@ -46,7 +46,7 @@
         buildah login -u "${DOCKERHUB_USER}" --password-stdin docker.io ||
           echo "Failed to login to Docker Hub."
 
-docker-pixman:
+docker-codecov:
   extends: .docker
   parallel:
     matrix:
@@ -76,5 +76,37 @@ docker-pixman:
         --platform=$(${PLT_LOOKUP} ${PLATFORM} 2 ${PLT_TBL})
         --build-arg BASE_IMAGE=${BASE_IMAGE}
         --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
-        -f Dockerfile .gitlab-ci.d/01-docker/
+        -f Dockerfile.codecov .gitlab-ci.d/01-docker/
     - buildah push ${FULL_IMAGE_NAME}
+
+.docker-pltcov:
+  extends: .docker
+  retry: 0
+  script:
+    # Prepare environment.
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-pltcov-${TARGET}
+
+    # Build and push the image.
+    - buildah bud
+        --tag ${FULL_IMAGE_NAME}
+        --layers
+        ${CACHE_ARGS}
+        -f Dockerfile.pltcov-${TARGET} .gitlab-ci.d/01-docker/
+    - buildah push ${FULL_IMAGE_NAME}
+
+docker-pltcov:linux:
+  extends: .docker-pltcov
+  rules:
+    - if: "'linux-mips' =~ $ACTIVE_PLT_PATTERN"
+    - if: "'linux-ppc' =~ $ACTIVE_PLT_PATTERN"
+    - if: "'linux-ppc64' =~ $ACTIVE_PLT_PATTERN"
+  variables:
+    TARGET: linux
+
+docker-pltcov:windows:
+  extends: .docker-pltcov
+  rules:
+    - if: "'windows-386' =~ $ACTIVE_PLT_PATTERN"
+    - if: "'windows-amd64' =~ $ACTIVE_PLT_PATTERN"
+  variables:
+    TARGET: windows

@@ -1,0 +1,32 @@
+ARG BASE_IMAGE=docker.io/debian
+# Debian Sid is requried for official riscv64 support.
+ARG BASE_IMAGE_TAG=bookworm-slim
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
+
+LABEL org.opencontainers.image.title="Pixman build environment for platform coverage (Windows targets)" \
+      org.opencontainers.image.authors="Marek Pikuła <m.pikula@partner.samsung.com>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN dpkg --add-architecture i386 \
+    && apt-get update \
+    # Install build dependencies.
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc-mingw-w64-i686 \
+        gcc-mingw-w64-x86-64 \
+        meson \
+        mingw-w64-tools \
+        procps \
+        wine \
+        wine32 \
+        wine64 \
+    # Clean up after apt.
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+# Inspired by https://code.videolan.org/videolan/docker-images
+RUN wine wineboot --init \
+    && while pgrep wineserver > /dev/null; do \
+        echo "waiting ..."; \
+        sleep 1; \
+    done \
+    && rm -rf /tmp/wine-*

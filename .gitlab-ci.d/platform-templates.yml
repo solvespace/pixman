@@ -16,7 +16,7 @@
   extends: .platform:all
   # Waiting for https://gitlab.com/gitlab-org/gitlab/-/issues/423553
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -28,7 +28,7 @@
 .platform:linux:amd64:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -40,7 +40,7 @@
 .platform:linux:arm:v5:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -55,7 +55,7 @@
 .platform:linux:arm:v7:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -67,7 +67,7 @@
 .platform:linux:arm64:v8:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -79,7 +79,7 @@
 .platform:linux:mips64el:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -92,7 +92,7 @@
 .platform:linux:mipsel:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -106,7 +106,7 @@
 .platform:linux:ppc64le:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:
@@ -118,7 +118,7 @@
 .platform:linux:riscv64:
   extends: .platform:all
   needs:
-    - job: docker-pixman
+    - job: docker-codecov
       optional: true
       parallel:
         matrix:

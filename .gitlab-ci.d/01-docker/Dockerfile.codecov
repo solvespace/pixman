@@ -1,9 +1,9 @@
 ARG BASE_IMAGE=docker.io/debian
 # Debian Sid is requried for official riscv64 support.
-ARG BASE_IMAGE_TAG=sid-slim
+ARG BASE_IMAGE_TAG=bookworm-slim
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
 
-LABEL org.opencontainers.image.title="Pixman build environment" \
+LABEL org.opencontainers.image.title="Pixman build environment for code coverage" \
       org.opencontainers.image.authors="Marek Pikuła <m.pikula@partner.samsung.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive

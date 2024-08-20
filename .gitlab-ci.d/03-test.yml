@@ -28,10 +28,25 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-386
+      toolchain: [gnu]
       pixman_disable:
         - "sse2 ssse3"  # Testing "mmx"
         - "mmx ssse3"  # Testing "sse2"
         - "mmx sse2"  # Testing "ssse3"
+  # TODO: Merge up after resolving
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/106
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-386
+      toolchain: [llvm]
+      pixman_disable:
+        # Same as above.
+        - "sse2 ssse3"
+        - "mmx ssse3"
+        - "mmx sse2"
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-amd64
@@ -42,12 +57,27 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v5
+      toolchain: [gnu]
       qemu_cpu: [arm1136]
       pixman_disable: ["arm-neon"] # Test only arm-simd.
       timeout: 3h
       test_timeout_multiplier: 40
       meson_testthreads: 1
       gcovr_flags: --gcov-ignore-parse-errors
+  # TODO: Merge up after resolving
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/107
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-arm-v5
+      toolchain: [llvm]
+      qemu_cpu: [arm1136]
+      pixman_disable: ["arm-neon"] # Test only arm-simd.
+      timeout: 3h
+      test_timeout_multiplier: 40
+      meson_testthreads: 1
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v7
@@ -59,6 +89,7 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mips
+      toolchain: [gnu]  # TODO: Add llvm once the build is fixed.
       qemu_cpu: [74Kf]
       job_name_suffix: ":failing"
       allow_failure: true  # Some tests seem to fail.
@@ -66,10 +97,22 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mips64el
+      toolchain: [gnu]
       qemu_cpu: [Loongson-3A4000]
+  # TODO: Merge up after resolving
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/108
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-mips64el
+      toolchain: [llvm]
+      qemu_cpu: [Loongson-3A4000]
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mipsel
+      toolchain: [gnu]  # TODO: Add llvm once the build is fixed.
       qemu_cpu: [74Kf]
       timeout: 2h
       meson_testthreads: 1
@@ -90,7 +133,18 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-ppc64le
+      toolchain: [gnu]
       qemu_cpu: [power10]
+  # TODO: Merge up after resolving
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/109
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-ppc64le
+      toolchain: [llvm]
+      qemu_cpu: [power10]
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-riscv64
@@ -100,9 +154,11 @@ include:
         - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
         - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
         - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64
+  # For now, only GNU toolchain is supported for Windows.
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: windows-686
+      toolchain: [gnu]
       pixman_disable:
         # The same as for linux-386.
         - "sse2 ssse3"
@@ -111,6 +167,7 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: windows-amd64
+      toolchain: [gnu]
       pixman_disable:
         # The same as for linux-amd64.
         - ""

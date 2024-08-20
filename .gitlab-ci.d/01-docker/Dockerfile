@@ -41,13 +41,27 @@ RUN ${APT_UPDATE} \
     && echo Meson version: \
     && meson --version
 
-FROM base AS native-base
+FROM base AS llvm-base
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} \
+        clang \
+        libclang-rt-dev \
+        lld \
+        llvm \
+    && ${APT_CLEANUP}
+
+FROM llvm-base AS native-base
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
         # Runtime library dependencies.
         libglib2.0-dev \
         libgtk-3-dev \
         libpng-dev \
+    # Install libomp-dev if available (OpenMP support for LLVM). It's done only
+    # for the native images, as OpenMP support in cross-build environment is
+    # tricky for LLVM.
+    && (${APT_INSTALL} libomp-dev \
+        || echo "OpenMP not available on this platform.") \
     && ${APT_CLEANUP}
 
 # The following targets differ in BASE_IMAGE.
@@ -62,17 +76,17 @@ FROM native-base AS linux-ppc64le
 FROM native-base AS linux-riscv64
 
 # The following targets should have a common BASE_IMAGE.
-FROM base AS linux-mips
+FROM llvm-base AS linux-mips
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} gcc-multilib-mips-linux-gnu \
     && ${APT_CLEANUP}
 
-FROM base AS linux-ppc
+FROM llvm-base AS linux-ppc
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} gcc-multilib-powerpc-linux-gnu \
     && ${APT_CLEANUP}
 
-FROM base AS linux-ppc64
+FROM llvm-base AS linux-ppc64
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} gcc-multilib-powerpc64-linux-gnu \
     && ${APT_CLEANUP}

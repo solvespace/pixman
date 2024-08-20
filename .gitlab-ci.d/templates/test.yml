@@ -4,6 +4,12 @@ spec:
       description:
         Build target in form of "OS-ARCH" pair (e.g., linux-amd64). Mostly the
         same as platform string for Docker but with a hyphen instead of slash.
+    toolchain:
+      description:
+        An array of toolchains to test with. Each toolchain should have an
+        appropriate Meson cross file.
+      type: array
+      default: [gnu, llvm]
     qemu_cpu:
       description:
         An array of QEMU_CPU environmental variables used as a job matrix
@@ -69,7 +75,10 @@ spec:
       parallel:
         matrix:
           - TARGET: $[[ inputs.target ]]
-    - build:$[[ inputs.target ]]
+    - job: build:$[[ inputs.target ]]
+      parallel:
+        matrix:
+          - TOOLCHAIN: $[[ inputs.toolchain ]]
   variables:
     TARGET: $[[ inputs.target ]]
     TEST_TIMEOUT_MULTIPLIER: $[[ inputs.test_timeout_multiplier ]]
@@ -77,7 +86,8 @@ spec:
     MESON_ARGS: -t ${TEST_TIMEOUT_MULTIPLIER} --no-rebuild -v ${TEST_NAME}
   parallel:
     matrix:
-      - PIXMAN_DISABLE: $[[ inputs.pixman_disable ]]
+      - TOOLCHAIN: $[[ inputs.toolchain ]]
+        PIXMAN_DISABLE: $[[ inputs.pixman_disable ]]
         QEMU_CPU: $[[ inputs.qemu_cpu ]]
   script:
     # Move MESON_TESTTHREADS to variables once

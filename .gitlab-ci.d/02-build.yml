@@ -9,7 +9,7 @@
 
 variables:
   # Used in test stage as well.
-  BUILD_DIR: build
+  BUILD_DIR: build-${TOOLCHAIN}
 
 # Applicable to all build targets.
 
@@ -35,8 +35,19 @@ include:
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-mips
+      toolchain: [gnu]
       qemu_cpu: 74Kf
       enable_gnu_coverage: false
+  # TODO: Merge with the one above once the following issue is resolved:
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/105).
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-mips
+      toolchain: [llvm]
+      qemu_cpu: 74Kf
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-mips64el
@@ -44,7 +55,18 @@ include:
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-mipsel
+      toolchain: [gnu]
       qemu_cpu: 74Kf
+  # TODO: Merge with the one above once the following issue is resolved:
+  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/105).
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-mipsel
+      toolchain: [llvm]
+      qemu_cpu: 74Kf
+      job_name_suffix: ":failing"
+      allow_failure: true
+      retry: 0
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-ppc
@@ -63,11 +85,14 @@ include:
     inputs:
       target: linux-riscv64
       qemu_cpu: rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
+  # Windows targets don't directly support LLVM at this moment.
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: windows-686
+      toolchain: [gnu]
       enable_gnu_coverage: false
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: windows-amd64
+      toolchain: [gnu]
       enable_gnu_coverage: false

@@ -4,6 +4,12 @@ spec:
       description:
         Build target in form of "OS-ARCH" pair (e.g., linux-amd64). Mostly the
         same as platform string for Docker but with a hyphen instead of slash.
+    toolchain:
+      description:
+        An array of toolchains to test with. Each toolchain should have an
+        appropriate Meson cross file.
+      type: array
+      default: [gnu, llvm]
     qemu_cpu:
       description:
         QEMU_CPU environmental variable used by Docker (which uses QEMU
@@ -51,14 +57,17 @@ spec:
   variables:
     TARGET: $[[ inputs.target ]]
     QEMU_CPU: $[[ inputs.qemu_cpu ]]
+  parallel:
+    matrix:
+      - TOOLCHAIN: $[[ inputs.toolchain ]]
   script:
     - |
-      if [ "$[[ inputs.enable_gnu_coverage ]]" == "true" ]; then
+      if [ "$[[ inputs.enable_gnu_coverage ]]" == "true" ] && [ "${TOOLCHAIN}" == "gnu" ]; then
         COV_C_ARGS=-fprofile-update=atomic
         COV_MESON_BUILD_ARGS=-Db_coverage=true
       fi
     - meson setup ${BUILD_DIR}
-        --cross-file .gitlab-ci.d/meson-cross/${TARGET}-gnu.meson
+        --cross-file .gitlab-ci.d/meson-cross/${TARGET}-${TOOLCHAIN}.meson
         -Dc_args="${COV_C_ARGS}" ${COV_MESON_BUILD_ARGS}
     - meson compile -C ${BUILD_DIR}
   artifacts:

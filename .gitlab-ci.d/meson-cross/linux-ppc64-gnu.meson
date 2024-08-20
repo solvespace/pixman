@@ -1,9 +1,7 @@
 [binaries]
 c = 'powerpc64-linux-gnu-gcc'
-cpp = 'powerpc64-linux-gnu-cpp'
 ar = 'powerpc64-linux-gnu-ar'
 strip = 'powerpc64-linux-gnu-strip'
-pkgconfig = 'pkg-config'
 exe_wrapper = ['qemu-ppc64', '-L', '/usr/powerpc64-linux-gnu/']
 
 [host_machine]

@@ -13,113 +13,61 @@ variables:
 
 # Applicable to all build targets.
 
-.build:all:
-  stage: build
-  variables:
-    # These are for job groups to fill.
-    GROUP_C_ARGS: ""
-    GROUP_MESON_ARGS: ""
-    # These are for jobs to fill if needed.
-    JOB_C_ARGS: ""
-    JOB_MESON_ARGS: ""
-  script:
-    - meson setup ${BUILD_DIR}
-        -Dc_args="-DCI_HAS_ALL_MIPS_CPU_FEATURES ${GROUP_C_ARGS} ${JOB_C_ARGS}"
-        ${GROUP_MESON_ARGS} ${JOB_MESON_ARGS}
-    - meson compile -C ${BUILD_DIR}
-  artifacts:
-    paths:
-      - ${BUILD_DIR}/
-
-# Code coverage target build.
-
-.codecov-build:all:
-  extends: .build:all
-  variables:
-    GROUP_C_ARGS: "-fprofile-update=atomic"
-    GROUP_MESON_ARGS: "-Db_coverage=true"
-
-codecov-build:linux:386:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:386
-
-codecov-build:linux:amd64:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:amd64
-
-codecov-build:linux:arm:v5:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:arm:v5
-  variables:
-    JOB_MESON_ARGS: -Dopenmp=disabled
-
-codecov-build:linux:arm:v7:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:arm:v7
-
-codecov-build:linux:arm64:v8:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:arm64:v8
-
-codecov-build:linux:mips64el:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:mips64el
-
-codecov-build:linux:mipsel:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:mipsel
-  variables:
-    JOB_MESON_ARGS: -Dopenmp=disabled
-
-codecov-build:linux:ppc64le:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:ppc64le
-
-codecov-build:linux:riscv64:
-  extends:
-    - .codecov-build:all
-    - .codecov:linux:riscv64
-  variables:
-    JOB_C_ARGS: "-march=rv64gcv"
-
-# Platform coverage target build.
-
-.pltcov-build:all:
-  extends:
-    - .build:all
-  variables:
-    CROSS_FILE_NAME: ${TARGET}.meson
-    GROUP_MESON_ARGS: "--cross-file .gitlab-ci.d/pltcov/meson-cross/${CROSS_FILE_NAME}"
-
-pltcov-build:linux:mips:
-  extends:
-    - .pltcov-build:all
-    - .pltcov:linux:mips
-
-pltcov-build:linux:ppc:
-  extends:
-    - .pltcov-build:all
-    - .pltcov:linux:ppc
-
-pltcov-build:linux:ppc64:
-  extends:
-    - .pltcov-build:all
-    - .pltcov:linux:ppc64
-
-pltcov-build:windows:686:
-  extends:
-    - .pltcov-build:all
-    - .pltcov:windows:686
-
-pltcov-build:windows:amd64:
-  extends:
-    - .pltcov-build:all
-    - .pltcov:windows:amd64
+include:
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-386
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-amd64
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-arm-v5
+      qemu_cpu: arm1136
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-arm-v7
+      qemu_cpu: max
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-arm64-v8
+      qemu_cpu: max
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-mips
+      qemu_cpu: 74Kf
+      enable_gnu_coverage: false
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-mips64el
+      qemu_cpu: Loongson-3A4000
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-mipsel
+      qemu_cpu: 74Kf
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-ppc
+      qemu_cpu: g4
+      enable_gnu_coverage: false
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-ppc64
+      qemu_cpu: ppc64
+      enable_gnu_coverage: false
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-ppc64le
+      qemu_cpu: power10
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: linux-riscv64
+      qemu_cpu: rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: windows-686
+      enable_gnu_coverage: false
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: windows-amd64
+      enable_gnu_coverage: false

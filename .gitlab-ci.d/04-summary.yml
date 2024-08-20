@@ -9,44 +9,43 @@ summary:
   stage: summary
   variables:
     TARGET: linux-amd64
+    COVERAGE_SUMMARY_DIR: ${COVERAGE_BASE_DIR}/summary
   needs:
-    - job: codecov-test:linux:386
+    - job: test:linux-386
       optional: true
-    - job: codecov-test:linux:amd64
+    - job: test:linux-amd64
       optional: true
-    - job: codecov-test:linux:arm:v5
+    - job: test:linux-arm-v5
       optional: true
-    - job: codecov-test:linux:arm:v7
+    - job: test:linux-arm-v7
       optional: true
-    - job: codecov-test:linux:arm64:v8
+    - job: test:linux-arm64-v8
       optional: true
-    - job: codecov-test:linux:mips64el
+    - job: test:linux-mips64el
       optional: true
-    - job: codecov-test:linux:mipsel
+    - job: test:linux-mipsel
       optional: true
-    - job: codecov-test:linux:ppc64le
+    - job: test:linux-ppc64le
       optional: true
-    - job: codecov-test:linux:riscv64
+    - job: test:linux-riscv64
       optional: true
   script:
-    - echo "Input coverage reports:" && ls ${COVERAGE_OUT_DIR}/coverage-*.json
+    - echo "Input coverage reports:" && ls ${COVERAGE_BASE_DIR}/*.json || (echo "No coverage reports available." && exit)
     - |
       args=( )
-      for f in ${COVERAGE_OUT_DIR}/coverage-*.json; do
+      for f in ${COVERAGE_BASE_DIR}/*.json; do
         args+=( "-a" "$f" )
       done
-    # Recreate the output directory, so that new artifacts don't mix with
-    # arch-specific HTML outputs.
-    - rm -fr ${COVERAGE_HTML_OUT_DIR} && mkdir -p ${COVERAGE_HTML_OUT_DIR}
+    - mkdir -p ${COVERAGE_SUMMARY_DIR}
     - gcovr "${args[@]}"
-        --cobertura-pretty --cobertura ${COVERAGE_OUT_DIR}/coverage.xml
-        --html-details ${COVERAGE_HTML_OUT_DIR}/coverage.html
+        --cobertura-pretty --cobertura ${COVERAGE_SUMMARY_DIR}/coverage.xml
+        --html-details ${COVERAGE_SUMMARY_DIR}/coverage.html
         --txt --print-summary
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: ${COVERAGE_OUT_DIR}/coverage.xml
+        path: ${COVERAGE_SUMMARY_DIR}/coverage.xml
     paths:
-      - ${COVERAGE_OUT_DIR}/
+      - ${COVERAGE_SUMMARY_DIR}/

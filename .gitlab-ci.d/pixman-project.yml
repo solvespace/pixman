@@ -53,7 +53,7 @@ default:
   retry: 1
 
 include:
-  - local: "/.gitlab-ci.d/platform-templates.yml"
+  - local: "/.gitlab-ci.d/templates/targets.yml"
   - local: "/.gitlab-ci.d/01-docker.yml"
   - local: "/.gitlab-ci.d/02-build.yml"
   - local: "/.gitlab-ci.d/03-test.yml"

@@ -20,184 +20,99 @@
 
 variables:
   # Used in summary stage as well.
-  COVERAGE_OUT_DIR: ${BUILD_DIR}/coverage
-  COVERAGE_HTML_OUT_DIR: ${COVERAGE_OUT_DIR}/html
+  COVERAGE_BASE_DIR: coverage
+  COVERAGE_OUT: ${COVERAGE_BASE_DIR}/${CI_JOB_ID}
+  TEST_NAME: ""  # Allow to specify a set of tests to run with run variables.
 
-.test:all:
-  stage: test
-  variables:
-    TEST_TIMEOUT_MULTIPLIER: 20
-    TEST_NAME: ""  # Allow to specify a set of tests to run with run variables.
-  script:
-    - meson test -C ${BUILD_DIR} -t ${TEST_TIMEOUT_MULTIPLIER}
-        --no-rebuild ${TEST_NAME}
-
-# Code coverage targets.
-
-.codecov-test:linux:
-  extends: .test:all
-  after_script:
-    - mkdir -p ${COVERAGE_OUT_DIR} ${COVERAGE_HTML_OUT_DIR}
-    - gcovr ${QCOVR_FLAGS} -r ./ ${BUILD_DIR} -e ./subprojects
-        --json ${COVERAGE_OUT_DIR}/coverage-${CI_JOB_ID}.json
-        --html-details ${COVERAGE_HTML_OUT_DIR}/coverage.html
-        --print-summary
-  artifacts:
-    paths:
-      - ${COVERAGE_OUT_DIR}/
-    reports:
-      junit: ${BUILD_DIR}/meson-logs/testlog.junit.xml
-
-codecov-test:linux:386:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:386
-  needs:
-    - codecov-build:linux:386
-  parallel:
-    matrix:
-      - PIXMAN_ENABLE: ["mmx"]
-        PIXMAN_DISABLE: ["sse2 ssse3"]
-      - PIXMAN_ENABLE: ["sse2"]
-        PIXMAN_DISABLE: ["mmx ssse3"]
-      - PIXMAN_ENABLE: ["ssse3"]
-        PIXMAN_DISABLE: ["mmx sse2"]
-
-codecov-test:linux:amd64:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:amd64
-  needs:
-    - codecov-build:linux:amd64
-  parallel:
-    matrix:
-      - PIXMAN_DISABLE:
+include:
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-386
+      pixman_disable:
+        - "sse2 ssse3"  # Testing "mmx"
+        - "mmx ssse3"  # Testing "sse2"
+        - "mmx sse2"  # Testing "ssse3"
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-amd64
+      pixman_disable:
         - ""
         - "fast"
         - "wholeops"
-
-codecov-test:linux:arm:v5:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:arm:v5
-  needs:
-    - codecov-build:linux:arm:v5
-  timeout: 3h
-  variables:
-    TEST_TIMEOUT_MULTIPLIER: 40
-    PIXMAN_DISABLE: "arm-neon arm-iwmmxt"  # Test only arm-simd.
-    MESON_TESTTHREADS: 1
-    QCOVR_FLAGS: --gcov-ignore-parse-errors
-
-codecov-test:linux:arm:v7:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:arm:v7
-  needs:
-    - codecov-build:linux:arm:v7
-
-codecov-test:linux:arm64:v8:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:arm64:v8
-  needs:
-    - codecov-build:linux:arm64:v8
-
-codecov-test:linux:mips64el:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:mips64el
-  needs:
-    - codecov-build:linux:mips64el
-  variables:
-    # Testing only loongson-mmi. Needs to be explicitly disabled due to
-    # CI_HAS_ALL_MIPS_CPU_FEATURES.
-    PIXMAN_DISABLE: "mips-dspr2"
-
-codecov-test:linux:mipsel:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:mipsel
-  needs:
-    - codecov-build:linux:mipsel
-  timeout: 2h
-  variables:
-    MESON_TESTTHREADS: 1
-    QCOVR_FLAGS: --gcov-ignore-parse-errors
-
-codecov-test:linux:ppc64le:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:ppc64le
-  needs:
-    - codecov-build:linux:ppc64le
-
-codecov-test:linux:riscv64:
-  extends:
-    - .codecov-test:linux
-    - .codecov:linux:riscv64
-  needs:
-    - codecov-build:linux:riscv64
-  parallel:
-    matrix:
-      # Test correctness for different VLENs.
-      - QEMU_CPU:
-          - rv64,v=true,vext_spec=v1.0,vlen=128,elen=64
-          - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
-          - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
-          - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64
-
-# Platform coverage targets.
-
-pltcov-test:linux:mips:
-  extends:
-    - .test:all
-    - .pltcov:linux:mips
-  needs:
-    - pltcov-build:linux:mips
-  allow_failure: true  # Some tests seem to fail.
-  retry: 0
-
-pltcov-test:linux:ppc:
-  extends:
-    - .test:all
-    - .pltcov:linux:ppc
-  needs:
-    - pltcov-build:linux:ppc
-  allow_failure: true  # SIGILL for some tests
-  retry: 0
-
-pltcov-test:linux:ppc64:
-  extends:
-    - .test:all
-    - .pltcov:linux:ppc64
-  needs:
-    - pltcov-build:linux:ppc64
-
-pltcov-test:windows:686:
-  extends:
-    - .test:all
-    - .pltcov:windows:686
-  needs:
-    - pltcov-build:windows:686
-  parallel:
-    matrix:
-      - PIXMAN_ENABLE: ["mmx"]
-        PIXMAN_DISABLE: ["sse2 ssse3"]
-      - PIXMAN_ENABLE: ["sse2"]
-        PIXMAN_DISABLE: ["mmx ssse3"]
-      - PIXMAN_ENABLE: ["ssse3"]
-        PIXMAN_DISABLE: ["mmx sse2"]
-
-pltcov-test:windows:amd64:
-  extends:
-    - .test:all
-    - .pltcov:windows:amd64
-  needs:
-    - pltcov-build:windows:amd64
-  parallel:
-    matrix:
-      - PIXMAN_DISABLE:
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-arm-v5
+      qemu_cpu: [arm1136]
+      pixman_disable: ["arm-neon"] # Test only arm-simd.
+      timeout: 3h
+      test_timeout_multiplier: 40
+      meson_testthreads: 1
+      gcovr_flags: --gcov-ignore-parse-errors
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-arm-v7
+      qemu_cpu: [max]
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-arm64-v8
+      qemu_cpu: [max]
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-mips
+      qemu_cpu: [74Kf]
+      job_name_suffix: ":failing"
+      allow_failure: true  # Some tests seem to fail.
+      retry: 0
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-mips64el
+      qemu_cpu: [Loongson-3A4000]
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-mipsel
+      qemu_cpu: [74Kf]
+      timeout: 2h
+      meson_testthreads: 1
+      gcovr_flags: --gcov-ignore-parse-errors
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-ppc
+      qemu_cpu: [g4]
+      allow_failure: true  # SIGILL for some tests
+      retry: 0
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-ppc64
+      qemu_cpu: [ppc64]
+      job_name_suffix: ":failing"
+      allow_failure: true  # SIGSEGV for some tests
+      retry: 0
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-ppc64le
+      qemu_cpu: [power10]
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: linux-riscv64
+      qemu_cpu:
+        # Test correctness for different VLENs.
+        - rv64,v=true,vext_spec=v1.0,vlen=128,elen=64
+        - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
+        - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
+        - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: windows-686
+      pixman_disable:
+        # The same as for linux-386.
+        - "sse2 ssse3"
+        - "mmx ssse3"
+        - "mmx sse2"
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: windows-amd64
+      pixman_disable:
+        # The same as for linux-amd64.
         - ""
         - "fast"
         - "wholeops"

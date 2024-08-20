@@ -1,10 +1,8 @@
 [binaries]
 c = 'powerpc-linux-gnu-gcc'
-cpp = 'powerpc-linux-gnu-cpp'
 ar = 'powerpc-linux-gnu-ar'
 strip = 'powerpc-linux-gnu-strip'
-pkgconfig = 'pkg-config'
-exe_wrapper = ['qemu-ppc', '-L', '/usr/powerpc-linux-gnu', '-cpu', 'g4']
+exe_wrapper = ['qemu-ppc', '-L', '/usr/powerpc-linux-gnu']
 
 [host_machine]
 system = 'linux'

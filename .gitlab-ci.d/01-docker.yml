@@ -12,7 +12,7 @@
       changes:
         paths:
           - .gitlab-ci.d/01-docker.yml
-          - .gitlab-ci.d/01-docker/
+          - .gitlab-ci.d/01-docker/**/*
       variables:
         DOCKER_TAG: $CI_COMMIT_REF_SLUG
     - if: $CI_PIPELINE_SOURCE == 'schedule'

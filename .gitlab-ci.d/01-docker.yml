@@ -47,7 +47,7 @@ docker-codecov:
   extends: .docker
   parallel:
     matrix:
-      - PLATFORM:
+      - TARGET:
         - linux-386
         - linux-amd64
         - linux-arm-v5
@@ -58,11 +58,11 @@ docker-codecov:
         - linux-ppc64le
         - linux-riscv64
   rules:
-    - if: $PLATFORM =~ $ACTIVE_CODE_PATTERN
+    - if: $TARGET =~ $ACTIVE_TARGET_PATTERN
   script:
     # Prepare environment.
-    - ${LOAD_PLATFORM_ENV}
-    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-${PLATFORM}
+    - ${LOAD_TARGET_ENV}
+    - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-${TARGET}
 
     # Build and push the image.
     - buildah bud
@@ -93,16 +93,16 @@ docker-codecov:
 docker-pltcov:linux:
   extends: .docker-pltcov
   rules:
-    - if: "'linux-mips' =~ $ACTIVE_PLT_PATTERN"
-    - if: "'linux-ppc' =~ $ACTIVE_PLT_PATTERN"
-    - if: "'linux-ppc64' =~ $ACTIVE_PLT_PATTERN"
+    - if: "'linux-mips' =~ $ACTIVE_TARGET_PATTERN"
+    - if: "'linux-ppc' =~ $ACTIVE_TARGET_PATTERN"
+    - if: "'linux-ppc64' =~ $ACTIVE_TARGET_PATTERN"
   variables:
     TARGET: linux
 
 docker-pltcov:windows:
   extends: .docker-pltcov
   rules:
-    - if: "'windows-386' =~ $ACTIVE_PLT_PATTERN"
-    - if: "'windows-amd64' =~ $ACTIVE_PLT_PATTERN"
+    - if: "'windows-386' =~ $ACTIVE_TARGET_PATTERN"
+    - if: "'windows-amd64' =~ $ACTIVE_TARGET_PATTERN"
   variables:
     TARGET: windows

@@ -157,7 +157,7 @@ pltcov-test:linux:mips:
     - job: pltcov-build:linux
       parallel:
         matrix:
-          - PLATFORM: linux-mips
+          - TARGET: linux-mips
   allow_failure: true  # Some tests seem to fail.
   retry: 0
 
@@ -169,7 +169,7 @@ pltcov-test:linux:ppc:
     - job: pltcov-build:linux
       parallel:
         matrix:
-          - PLATFORM: linux-ppc
+          - TARGET: linux-ppc
   allow_failure: true  # SIGILL for some tests
   retry: 0
 
@@ -181,7 +181,7 @@ pltcov-test:linux:ppc64:
     - job: pltcov-build:linux
       parallel:
         matrix:
-          - PLATFORM: linux-ppc64
+          - TARGET: linux-ppc64
 
 pltcov-test:windows:386:
   extends:
@@ -191,7 +191,7 @@ pltcov-test:windows:386:
     - job: pltcov-build:windows
       parallel:
         matrix:
-          - PLATFORM: windows-386
+          - TARGET: windows-386
   parallel:
     matrix:
       - PIXMAN_ENABLE: ["mmx"]
@@ -209,7 +209,7 @@ pltcov-test:windows:amd64:
     - job: pltcov-build:windows
       parallel:
         matrix:
-          - PLATFORM: windows-amd64
+          - TARGET: windows-amd64
   parallel:
     matrix:
       - PIXMAN_DISABLE:

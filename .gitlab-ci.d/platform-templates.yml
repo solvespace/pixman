@@ -13,9 +13,9 @@
 
 .codecov:all:
   rules:
-    - if: "$PLATFORM =~ $ACTIVE_CODE_PATTERN"
+    - if: "$TARGET =~ $ACTIVE_TARGET_PATTERN"
   image:
-    name: $DOCKER_IMAGE_NAME-$PLATFORM
+    name: $DOCKER_IMAGE_NAME-$TARGET
 
 # i386 is used for `mmx`, `sse2` and `ssse3` backend tests.
 .codecov:linux:386:
@@ -26,9 +26,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-386
+          - TARGET: linux-386
   variables:
-    PLATFORM: linux-386
+    TARGET: linux-386
 
 # amd64 is used for general tests.
 .codecov:linux:amd64:
@@ -38,9 +38,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-amd64
+          - TARGET: linux-amd64
   variables:
-    PLATFORM: linux-amd64
+    TARGET: linux-amd64
 
 # ARMv5 is used for `arm-simd` test.
 .codecov:linux:arm:v5:
@@ -50,9 +50,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-arm-v5
+          - TARGET: linux-arm-v5
   variables:
-    PLATFORM: linux-arm-v5
+    TARGET: linux-arm-v5
     # It is in fact an ARMv6 CPU, which is required for SIMD to get discovered
     # on runtime.
     QEMU_CPU: arm1136
@@ -65,9 +65,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-arm-v7
+          - TARGET: linux-arm-v7
   variables:
-    PLATFORM: linux-arm-v7
+    TARGET: linux-arm-v7
 
 # ARM64v8 is used for `arm-neon`.
 .codecov:linux:arm64:v8:
@@ -77,9 +77,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-arm64-v8
+          - TARGET: linux-arm64-v8
   variables:
-    PLATFORM: linux-arm64-v8
+    TARGET: linux-arm64-v8
 
 # MIPS64EL used for `loongson-mmi`.
 .codecov:linux:mips64el:
@@ -89,9 +89,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-mips64el
+          - TARGET: linux-mips64el
   variables:
-    PLATFORM: linux-mips64el
+    TARGET: linux-mips64el
     QEMU_CPU: "Loongson-3A4000"
 
 # MIPS (32 bit, little endian) is used for `mips-dspr2`.
@@ -102,9 +102,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-mipsel
+          - TARGET: linux-mipsel
   variables:
-    PLATFORM: linux-mipsel
+    TARGET: linux-mipsel
     # As written in the code comment, it's the only supported CPU.
     QEMU_CPU: 74Kf
 
@@ -116,9 +116,9 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-ppc64le
+          - TARGET: linux-ppc64le
   variables:
-    PLATFORM: linux-ppc64le
+    TARGET: linux-ppc64le
 
 # RISCV64 used for `rvv`.
 .codecov:linux:riscv64:
@@ -128,16 +128,16 @@
       optional: true
       parallel:
         matrix:
-          - PLATFORM: linux-riscv64
+          - TARGET: linux-riscv64
   variables:
-    PLATFORM: linux-riscv64
+    TARGET: linux-riscv64
     QEMU_CPU: rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
 
 # Platform coverage targets (Linux).
 
 .pltcov:all:
   rules:
-    - if: "$PLATFORM =~ $ACTIVE_PLT_PATTERN"
+    - if: "$TARGET =~ $ACTIVE_TARGET_PATTERN"
 
 .pltcov:linux:
   extends: .pltcov:all
@@ -151,19 +151,19 @@
 .pltcov:linux:mips:
   extends: .pltcov:linux
   variables:
-    PLATFORM: linux-mips
+    TARGET: linux-mips
 
 # PPC (32 bit, big endian) used for `vmx`.
 .pltcov:linux:ppc:
   extends: .pltcov:linux
   variables:
-    PLATFORM: linux-ppc
+    TARGET: linux-ppc
 
 # PPC64 (64 bit, big endian) used for `vmx`.
 .pltcov:linux:ppc64:
   extends: .pltcov:linux
   variables:
-    PLATFORM: linux-ppc64
+    TARGET: linux-ppc64
 
 # Platform coverage targets (Windows).
 
@@ -179,10 +179,10 @@
 .pltcov:windows:386:
   extends: .pltcov:windows
   variables:
-    PLATFORM: windows-386
+    TARGET: windows-386
 
 # Windows amd64
 .pltcov:windows:amd64:
   extends: .pltcov:windows
   variables:
-    PLATFORM: windows-amd64
+    TARGET: windows-amd64

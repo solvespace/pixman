@@ -1,9 +1,0 @@
-linux-386      linux/386       docker.io/i386/debian                       bookworm-slim
-linux-amd64    linux/amd64     docker.io/amd64/debian                      bookworm-slim
-linux-arm-v5   linux/arm/v5    docker.io/arm32v5/debian                    bookworm-slim
-linux-arm-v7   linux/arm/v7    docker.io/arm32v7/debian                    bookworm-slim
-linux-arm64-v8 linux/arm64/v8  docker.io/arm64v8/debian                    bookworm-slim
-linux-mips64el linux/mips64el  docker.io/mips64le/debian                   bookworm-slim
-linux-mipsel   linux/mipsel    docker.io/serenitycode/debian-debootstrap   mipsel-bookworm-slim    # There is no official mipsel image, thus custom one from debootstrap is used.
-linux-ppc64le  linux/ppc64le   docker.io/ppc64le/debian                    bookworm-slim
-linux-riscv64  linux/riscv64   docker.io/riscv64/debian                    sid-slim                # There is no bookworm image available for riscv64.

@@ -32,9 +32,6 @@
     BUILDAH_ISOLATION: chroot
     CACHE_IMAGE: ${CI_REGISTRY_IMAGE}/cache
     CACHE_ARGS: --cache-from ${CACHE_IMAGE} --cache-to ${CACHE_IMAGE}
-
-    PLT_LOOKUP: .gitlab-ci.d/01-docker/platform-lookup.awk
-    PLT_TBL: .gitlab-ci.d/01-docker/platform.lut
   before_script:
     # Login to the target registry.
     - echo "${CI_REGISTRY_PASSWORD}" |
@@ -64,8 +61,7 @@ docker-codecov:
     - if: $PLATFORM =~ $ACTIVE_CODE_PATTERN
   script:
     # Prepare environment.
-    - BASE_IMAGE=$(${PLT_LOOKUP} ${PLATFORM} 3 ${PLT_TBL})
-    - BASE_IMAGE_TAG=$(${PLT_LOOKUP} ${PLATFORM} 4 ${PLT_TBL})
+    - ${LOAD_PLATFORM_ENV}
     - FULL_IMAGE_NAME=${DOCKER_IMAGE_NAME}-${PLATFORM}
 
     # Build and push the image.
@@ -73,7 +69,7 @@ docker-codecov:
         --tag ${FULL_IMAGE_NAME}
         --layers
         ${CACHE_ARGS}
-        --platform=$(${PLT_LOOKUP} ${PLATFORM} 2 ${PLT_TBL})
+        --platform=${DOCKER_PLATFORM}
         --build-arg BASE_IMAGE=${BASE_IMAGE}
         --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
         -f Dockerfile.codecov .gitlab-ci.d/01-docker/

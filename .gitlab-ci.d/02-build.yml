@@ -85,14 +85,11 @@ include:
     inputs:
       target: linux-riscv64
       qemu_cpu: rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
-  # Windows targets don't directly support LLVM at this moment.
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: windows-686
-      toolchain: [gnu]
       enable_gnu_coverage: false
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: windows-amd64
-      toolchain: [gnu]
       enable_gnu_coverage: false

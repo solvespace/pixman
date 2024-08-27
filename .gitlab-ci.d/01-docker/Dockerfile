@@ -98,6 +98,16 @@ RUN ${APT_UPDATE} \
 FROM base AS windows-base
 ARG LLVM_MINGW_RELEASE=20240619
 ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-msvcrt-ubuntu-20.04-x86_64
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} wget \
+    && ${APT_CLEANUP} \
+    && cd /opt \
+    && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}.tar.xz \
+    && tar -xf ${LLVM_MINGW_VARIANT}.tar.xz \
+    && rm -f ${LLVM_MINGW_VARIANT}.tar.xz
+ENV PATH=${PATH}:/opt/${LLVM_MINGW_VARIANT}/bin
+
+FROM windows-base AS windows-x86-base
 RUN dpkg --add-architecture i386 \
     && ${APT_UPDATE} \
     && ${APT_INSTALL} \
@@ -108,13 +118,7 @@ RUN dpkg --add-architecture i386 \
         wine \
         wine32 \
         wine64 \
-        wget \
     && ${APT_CLEANUP} \
-    # Install llvm-mingw.
-    && cd /opt \
-    && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}.tar.xz \
-    && tar -xf ${LLVM_MINGW_VARIANT}.tar.xz \
-    && rm -f ${LLVM_MINGW_VARIANT}.tar.xz \
     # Inspired by https://code.videolan.org/videolan/docker-images
     && wine wineboot --init \
     && while pgrep wineserver > /dev/null; do \
@@ -122,7 +126,15 @@ RUN dpkg --add-architecture i386 \
         sleep 1; \
     done \
     && rm -rf /tmp/wine-*
-ENV PATH=${PATH}:/opt/${LLVM_MINGW_VARIANT}/bin
 
-FROM windows-base AS windows-686
-FROM windows-base AS windows-amd64
+FROM windows-x86-base AS windows-686
+FROM windows-x86-base AS windows-amd64
+
+# aarch64 image requires linaro/wine-arm64 as a base.
+FROM windows-base AS windows-arm64-v8
+RUN wine-arm64 wineboot --init \
+    && while pgrep wineserver > /dev/null; do \
+        echo "waiting ..."; \
+        sleep 1; \
+    done \
+    && rm -rf /tmp/wine-*

@@ -170,3 +170,8 @@ include:
         - ""
         - "fast"
         - "wholeops"
+  - local: .gitlab-ci.d/templates/test.yml
+    inputs:
+      target: windows-arm64-v8
+      toolchain: [llvm]
+      qemu_cpu: [max]

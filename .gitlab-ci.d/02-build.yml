@@ -93,3 +93,9 @@ include:
     inputs:
       target: windows-amd64
       enable_gnu_coverage: false
+  - local: .gitlab-ci.d/templates/build.yml
+    inputs:
+      target: windows-arm64-v8
+      toolchain: [llvm]  # GNU toolchain doesn't seem to support Windows on ARM.
+      qemu_cpu: max
+      enable_gnu_coverage: false

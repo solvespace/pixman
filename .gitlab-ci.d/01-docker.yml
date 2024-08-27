@@ -59,6 +59,7 @@ docker:
         - linux-riscv64
         - windows-686
         - windows-amd64
+        - windows-arm64-v8
   script:
     # Prepare environment.
     - ${LOAD_TARGET_ENV}

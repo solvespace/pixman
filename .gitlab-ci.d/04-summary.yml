@@ -5,11 +5,10 @@
 # HTML report generated as a separate artifact.
 
 summary:
+  extends: .target:all
   stage: summary
-  image:
-    name: $DOCKER_IMAGE_NAME-linux-amd64
-    docker:
-      platform: linux/amd64
+  variables:
+    TARGET: linux-amd64
   needs:
     - job: codecov-test:linux:386
       optional: true

@@ -99,23 +99,27 @@ codecov-build:linux:riscv64:
     CROSS_FILE_NAME: ${TARGET}.meson
     GROUP_MESON_ARGS: "--cross-file .gitlab-ci.d/pltcov/meson-cross/${CROSS_FILE_NAME}"
 
-pltcov-build:linux:
+pltcov-build:linux:mips:
   extends:
     - .pltcov-build:all
-    - .pltcov:linux
-  parallel:
-    matrix:
-      - TARGET:
-        - linux-mips
-        - linux-ppc
-        - linux-ppc64
+    - .pltcov:linux:mips
 
-pltcov-build:windows:
+pltcov-build:linux:ppc:
   extends:
     - .pltcov-build:all
-    - .pltcov:windows
-  parallel:
-    matrix:
-      - TARGET:
-        - windows-386
-        - windows-amd64
+    - .pltcov:linux:ppc
+
+pltcov-build:linux:ppc64:
+  extends:
+    - .pltcov-build:all
+    - .pltcov:linux:ppc64
+
+pltcov-build:windows:686:
+  extends:
+    - .pltcov-build:all
+    - .pltcov:windows:686
+
+pltcov-build:windows:amd64:
+  extends:
+    - .pltcov-build:all
+    - .pltcov:windows:amd64

@@ -11,18 +11,20 @@
 #   architectures, which don't have official Debian support, and don't increase
 #   the code coverage.
 
-.codecov:all:
-  rules:
-    - if: "$TARGET =~ $ACTIVE_TARGET_PATTERN"
+.target:all:
   image:
     name: $DOCKER_IMAGE_NAME-$TARGET
+  rules:
+    - if: "$TARGET =~ $ACTIVE_TARGET_PATTERN"
+  before_script:
+    - ${LOAD_TARGET_ENV}
 
 # i386 is used for `mmx`, `sse2` and `ssse3` backend tests.
 .codecov:linux:386:
-  extends: .codecov:all
+  extends: .target:all
   # Waiting for https://gitlab.com/gitlab-org/gitlab/-/issues/423553
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -32,9 +34,9 @@
 
 # amd64 is used for general tests.
 .codecov:linux:amd64:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -44,9 +46,9 @@
 
 # ARMv5 is used for `arm-simd` test.
 .codecov:linux:arm:v5:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -59,9 +61,9 @@
 
 # ARMv7 is used for ARMv7 variant of `arm-neon`.
 .codecov:linux:arm:v7:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -71,9 +73,9 @@
 
 # ARM64v8 is used for `arm-neon`.
 .codecov:linux:arm64:v8:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -83,9 +85,9 @@
 
 # MIPS64EL used for `loongson-mmi`.
 .codecov:linux:mips64el:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -96,9 +98,9 @@
 
 # MIPS (32 bit, little endian) is used for `mips-dspr2`.
 .codecov:linux:mipsel:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -110,9 +112,9 @@
 
 # PPC64LE used for `vmx`.
 .codecov:linux:ppc64le:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -122,9 +124,9 @@
 
 # RISCV64 used for `rvv`.
 .codecov:linux:riscv64:
-  extends: .codecov:all
+  extends: .target:all
   needs:
-    - job: docker-codecov
+    - job: docker
       optional: true
       parallel:
         matrix:
@@ -135,54 +137,64 @@
 
 # Platform coverage targets (Linux).
 
-.pltcov:all:
-  rules:
-    - if: "$TARGET =~ $ACTIVE_TARGET_PATTERN"
-
-.pltcov:linux:
-  extends: .pltcov:all
-  needs:
-    - job: docker-pltcov:linux
-      optional: true
-  image:
-    name: $DOCKER_IMAGE_NAME-pltcov-linux
-
 # MIPS (32 bit, big endian) used for `mips-dspr2`.
 .pltcov:linux:mips:
-  extends: .pltcov:linux
+  extends: .target:all
+  needs:
+    - job: docker
+      optional: true
+      parallel:
+        matrix:
+          - TARGET: linux-mips
   variables:
     TARGET: linux-mips
 
 # PPC (32 bit, big endian) used for `vmx`.
 .pltcov:linux:ppc:
-  extends: .pltcov:linux
+  extends: .target:all
+  needs:
+    - job: docker
+      optional: true
+      parallel:
+        matrix:
+          - TARGET: linux-ppc
   variables:
     TARGET: linux-ppc
 
 # PPC64 (64 bit, big endian) used for `vmx`.
 .pltcov:linux:ppc64:
-  extends: .pltcov:linux
+  extends: .target:all
+  needs:
+    - job: docker
+      optional: true
+      parallel:
+        matrix:
+          - TARGET: linux-ppc64
   variables:
     TARGET: linux-ppc64
 
 # Platform coverage targets (Windows).
 
-.pltcov:windows:
-  extends: .pltcov:all
-  needs:
-    - job: docker-pltcov:windows
-      optional: true
-  image:
-    name: $DOCKER_IMAGE_NAME-pltcov-windows
-
 # Windows i386
-.pltcov:windows:386:
-  extends: .pltcov:windows
+.pltcov:windows:686:
+  extends: .target:all
+  needs:
+    - job: docker
+      optional: true
+      parallel:
+        matrix:
+          - TARGET: windows-686
   variables:
-    TARGET: windows-386
+    TARGET: windows-686
 
 # Windows amd64
 .pltcov:windows:amd64:
-  extends: .pltcov:windows
+  extends: .target:all
+  needs:
+    - job: docker
+      optional: true
+      parallel:
+        matrix:
+          - TARGET: windows-amd64
   variables:
     TARGET: windows-amd64

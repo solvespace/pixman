@@ -129,7 +129,11 @@ _mm_mulhi_pu16 (__m64 __A, __m64 __B)
  * If __m64 is a double datatype, then define USE_M64_DOUBLE.
  */
 #ifdef _MSC_VER
-# define M64_MEMBER m64_u64
+# ifdef __clang__
+#  define USE_CVT_INTRINSICS
+# else
+#  define M64_MEMBER m64_u64
+# endif
 #elif defined(__ICC)
 # define USE_CVT_INTRINSICS
 #elif defined(USE_LOONGSON_MMI)

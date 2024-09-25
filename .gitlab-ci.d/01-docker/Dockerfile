@@ -42,15 +42,23 @@ RUN ${APT_UPDATE} \
     && meson --version
 
 FROM base AS llvm-base
+# LLVM 16 is the highest available in Bookworm. Preferably, we should use the
+# same version for all platforms, but it's not possible at the moment.
+ARG LLVM_VERSION=16
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
-        clang \
-        libclang-rt-dev \
-        lld \
-        llvm \
-    && ${APT_CLEANUP}
+        clang-${LLVM_VERSION} \
+        libclang-rt-${LLVM_VERSION}-dev \
+        lld-${LLVM_VERSION} \
+        llvm-${LLVM_VERSION} \
+    && ${APT_CLEANUP} \
+    && ln -f /usr/bin/clang-${LLVM_VERSION} /usr/bin/clang \
+    && ln -f /usr/bin/lld-${LLVM_VERSION} /usr/bin/lld \
+    && ln -f /usr/bin/llvm-ar-${LLVM_VERSION} /usr/bin/llvm-ar \
+    && ln -f /usr/bin/llvm-strip-${LLVM_VERSION} /usr/bin/llvm-strip
 
 FROM llvm-base AS native-base
+ARG LLVM_VERSION=16
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
         # Runtime library dependencies.
@@ -60,7 +68,7 @@ RUN ${APT_UPDATE} \
     # Install libomp-dev if available (OpenMP support for LLVM). It's done only
     # for the native images, as OpenMP support in cross-build environment is
     # tricky for LLVM.
-    && (${APT_INSTALL} libomp-dev \
+    && (${APT_INSTALL} libomp-${LLVM_VERSION}-dev \
         || echo "OpenMP not available on this platform.") \
     && ${APT_CLEANUP}
 

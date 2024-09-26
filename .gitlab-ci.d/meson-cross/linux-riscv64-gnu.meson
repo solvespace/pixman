@@ -1,5 +1,1 @@
-[binaries]
-c = ['gcc', '-march=rv64gcv']
-ar = 'ar'
-strip = 'strip'
-pkg-config = 'pkg-config'
+native-gnu.meson

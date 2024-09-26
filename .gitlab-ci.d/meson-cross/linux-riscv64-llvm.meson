@@ -1,5 +1,1 @@
-[binaries]
-c = ['clang', '-march=rv64gcv']
-ar = 'llvm-ar'
-strip = 'llvm-strip'
-pkg-config = 'pkg-config'
+native-llvm.meson

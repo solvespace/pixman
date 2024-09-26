@@ -84,18 +84,13 @@ spec:
     TEST_TIMEOUT_MULTIPLIER: $[[ inputs.test_timeout_multiplier ]]
     GCOVR_FLAGS: $[[ inputs.gcovr_flags ]]
     MESON_ARGS: -t ${TEST_TIMEOUT_MULTIPLIER} --no-rebuild -v ${TEST_NAME}
+    MESON_TESTTHREADS: $[[ inputs.meson_testthreads ]]
   parallel:
     matrix:
       - TOOLCHAIN: $[[ inputs.toolchain ]]
         PIXMAN_DISABLE: $[[ inputs.pixman_disable ]]
         QEMU_CPU: $[[ inputs.qemu_cpu ]]
   script:
-    # Move MESON_TESTTHREADS to variables once
-    # https://github.com/mesonbuild/meson/pull/13604 gets released.
-    - |
-      if [ $[[ inputs.meson_testthreads ]] -gt 0 ]; then
-        MESON_TESTTHREADS=$[[ inputs.meson_testthreads ]]
-      fi
     - meson test -C ${BUILD_DIR} ${MESON_ARGS}
   after_script:
     - mkdir -p ${COVERAGE_OUT}

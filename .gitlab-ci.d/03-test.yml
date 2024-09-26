@@ -149,6 +149,8 @@ include:
     inputs:
       target: linux-riscv64
       qemu_cpu:
+        # Test on target without RVV (verify no autovectorization).
+        - rv64,v=false
         # Test correctness for different VLENs.
         - rv64,v=true,vext_spec=v1.0,vlen=128,elen=64
         - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64

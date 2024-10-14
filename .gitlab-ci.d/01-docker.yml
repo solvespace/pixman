@@ -12,6 +12,7 @@ include:
         - linux-arm-v5
         - linux-arm-v7
         - linux-arm64-v8
+        - windows-arm64-v8
   - local: .gitlab-ci.d/templates/docker.yml
     inputs:
       runner_tag: $RUNNER_TAG_DEFAULT
@@ -27,4 +28,3 @@ include:
         - linux-riscv64
         - windows-686
         - windows-amd64
-        - windows-arm64-v8

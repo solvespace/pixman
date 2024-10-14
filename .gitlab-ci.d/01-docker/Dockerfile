@@ -109,13 +109,13 @@ RUN ${APT_UPDATE} \
 # Windows base image with a pre-built LLVM MinGW toolchain.
 FROM base AS windows-llvm-base
 ARG LLVM_MINGW_RELEASE=20241203
-ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-msvcrt-ubuntu-20.04-x86_64
+ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-ucrt-ubuntu-20.04
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
         procps \
         wget \
     && ${APT_CLEANUP} \
-    && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}.tar.xz \
+    && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}-`uname -m`.tar.xz \
         -O - | tar -xJ -C /opt \
     && mv /opt/llvm* /opt/llvm
 ENV PATH=/opt/llvm/bin:${PATH} \
@@ -150,11 +150,46 @@ RUN ${APT_UPDATE} \
     && ${APT_CLEANUP} \
     && ${WINE_BOOT}
 
-# aarch64 image requires linaro/wine-arm64 as a base.
-FROM windows-llvm-base AS windows-arm64-v8
-RUN wine-arm64 wineboot --init \
-    && while pgrep wineserver > /dev/null; do \
-        echo "waiting ..."; \
-        sleep 1; \
-    done \
-    && rm -rf /tmp/wine-*
+# Dependencies needed both for Wine build and the final image.
+FROM windows-llvm-base AS windows-wine-build-base
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} \
+        libfreetype-dev \
+        libgnutls28-dev \
+        libkrb5-dev \
+        libx11-dev \
+        libxcomposite-dev \
+        libxcursor-dev \
+        libxext-dev \
+        libxfixes-dev \
+        libxi-dev \
+        libxrandr-dev \
+        libxrender-dev \
+    && ${APT_CLEANUP}
+
+# Wine build intermediate target, not going into the final image.
+FROM windows-wine-build-base AS windows-wine-build
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} \
+        bison \
+        ca-certificates \
+        clang \
+        flex \
+        git \
+        lld \
+        llvm \
+    && ${APT_CLEANUP}
+ARG WINE_VERSION=9.22
+RUN git clone https://gitlab.winehq.org/wine/wine.git \
+        -b wine-${WINE_VERSION} \
+        --depth 1
+RUN cd wine \
+    && ./configure --enable-win64 --disable-tests --without-unwind --prefix=/opt/wine \
+    && make -j`nproc` \
+    && make install
+
+FROM windows-wine-build-base AS windows-arm64-v8
+COPY --from=windows-wine-build /opt/wine /opt/wine
+ENV PATH=/opt/wine/bin:${PATH} \
+    WINEPATH=/opt/llvm/aarch64-w64-mingw32/bin
+RUN ${WINE_BOOT}

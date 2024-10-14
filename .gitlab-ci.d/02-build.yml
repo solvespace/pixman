@@ -87,5 +87,6 @@ include:
     inputs:
       target: windows-arm64-v8
       toolchain: [llvm]  # GNU toolchain doesn't seem to support Windows on ARM.
-      qemu_cpu: max
       enable_gnu_coverage: false
+      runner_tag: $RUNNER_TAG_ARM
+      docker_job: docker:${RUNNER_TAG_ARM}

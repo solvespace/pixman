@@ -106,47 +106,52 @@ RUN ${APT_UPDATE} \
     && ${APT_INSTALL} gcc-multilib-powerpc64-linux-gnu \
     && ${APT_CLEANUP}
 
-# We use a common image for Windows i686 and amd64, as it doesn't make sense to
-# make them separate in terms of build time and image size. After two runs they
-# should use the same cache layers, so in the end it makes the collective image
-# size smaller.
-FROM base AS windows-base
-ARG LLVM_MINGW_RELEASE=20240619
+# Windows base image with a pre-built LLVM MinGW toolchain.
+FROM base AS windows-llvm-base
+ARG LLVM_MINGW_RELEASE=20241203
 ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-msvcrt-ubuntu-20.04-x86_64
 RUN ${APT_UPDATE} \
-    && ${APT_INSTALL} wget \
+    && ${APT_INSTALL} \
+        procps \
+        wget \
     && ${APT_CLEANUP} \
-    && cd /opt \
     && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}.tar.xz \
-    && tar -xf ${LLVM_MINGW_VARIANT}.tar.xz \
-    && rm -f ${LLVM_MINGW_VARIANT}.tar.xz
-ENV PATH=${PATH}:/opt/${LLVM_MINGW_VARIANT}/bin
+        -O - | tar -xJ -C /opt \
+    && mv /opt/llvm* /opt/llvm
+ENV PATH=/opt/llvm/bin:${PATH} \
+    # Inspired by https://code.videolan.org/videolan/docker-images
+    WINE_BOOT='wine wineboot --init \
+        && while pgrep wineserver > /dev/null; do \
+            echo "waiting ..."; \
+            sleep 1; \
+        done \
+        && rm -rf /tmp/wine-*'
 
-FROM windows-base AS windows-x86-base
+FROM windows-llvm-base AS windows-686
+ENV WINEPATH=/opt/llvm/i686-w64-mingw32/bin \
+    WINEARCH=win32
 RUN dpkg --add-architecture i386 \
     && ${APT_UPDATE} \
     && ${APT_INSTALL} \
-        gcc-mingw-w64-i686 \
-        gcc-mingw-w64-x86-64 \
-        mingw-w64-tools \
-        procps \
+        libwine:i386 \
         wine \
         wine32 \
+    && ${APT_CLEANUP} \
+    && ${WINE_BOOT}
+
+FROM windows-llvm-base AS windows-amd64
+ENV WINEPATH=/opt/llvm/x86_64-w64-mingw32/bin \
+    WINEARCH=win64
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} \
+        libwine \
+        wine \
         wine64 \
     && ${APT_CLEANUP} \
-    # Inspired by https://code.videolan.org/videolan/docker-images
-    && wine wineboot --init \
-    && while pgrep wineserver > /dev/null; do \
-        echo "waiting ..."; \
-        sleep 1; \
-    done \
-    && rm -rf /tmp/wine-*
-
-FROM windows-x86-base AS windows-686
-FROM windows-x86-base AS windows-amd64
+    && ${WINE_BOOT}
 
 # aarch64 image requires linaro/wine-arm64 as a base.
-FROM windows-base AS windows-arm64-v8
+FROM windows-llvm-base AS windows-arm64-v8
 RUN wine-arm64 wineboot --init \
     && while pgrep wineserver > /dev/null; do \
         echo "waiting ..."; \

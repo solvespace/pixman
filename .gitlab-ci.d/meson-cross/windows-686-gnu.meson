@@ -13,3 +13,6 @@ system = 'windows'
 cpu_family = 'x86'
 cpu = 'i686'
 endian = 'little'
+
+[project options]
+openmp = 'disabled'

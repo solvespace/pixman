@@ -46,10 +46,15 @@ spec:
         `allow_failure`.
       type: number
       default: 1
+    runner_tag:
+      description: GitLab runner tag for this job.
+      default: $RUNNER_TAG_DEFAULT
 ---
 
 "$[[ inputs.job_name_prefix ]]build:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":
   extends: .target:all
+  tags:
+    - $[[ inputs.runner_tag | expand_vars ]]
   stage: build
   allow_failure: $[[ inputs.allow_failure ]]
   retry: $[[ inputs.retry ]]

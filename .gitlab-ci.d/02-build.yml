@@ -24,6 +24,8 @@ include:
     inputs:
       target: linux-arm-v5
       qemu_cpu: arm1136
+      # Disable coverage, as the tests take too long to run with a single thread.
+      enable_gnu_coverage: false
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-arm-v7
@@ -58,6 +60,8 @@ include:
       target: linux-mipsel
       toolchain: [gnu]
       qemu_cpu: 74Kf
+      # Disable coverage, as the tests take too long to run with a single thread.
+      enable_gnu_coverage: false
   # TODO: Merge with the one above once the following issue is resolved:
   # https://gitlab.freedesktop.org/pixman/pixman/-/issues/105).
   - local: .gitlab-ci.d/templates/build.yml

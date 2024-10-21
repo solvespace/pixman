@@ -15,15 +15,11 @@ summary:
       optional: true
     - job: test:linux-amd64
       optional: true
-    - job: test:linux-arm-v5
-      optional: true
     - job: test:linux-arm-v7
       optional: true
     - job: test:linux-arm64-v8
       optional: true
     - job: test:linux-mips64el
-      optional: true
-    - job: test:linux-mipsel
       optional: true
     - job: test:linux-ppc64le
       optional: true

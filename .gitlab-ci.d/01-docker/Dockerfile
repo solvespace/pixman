@@ -10,6 +10,7 @@ ENV APT_UPDATE="apt-get update" \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     APT_CLEANUP="rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*"
 
+ARG GCOVR_VERSION="~=7.2"
 ARG MESON_VERSION="~=1.6"
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
@@ -36,7 +37,7 @@ RUN ${APT_UPDATE} \
     # Install a recent version of meson and gcovr using pipx to have the same
     # version across all variants regardless of base.
     && pipx install --global \
-        gcovr \
+        gcovr${GCOVR_VERSION} \
         meson${MESON_VERSION} \
     && gcovr --version \
     && echo Meson version: \

@@ -70,11 +70,14 @@ spec:
       if [ "$[[ inputs.enable_gnu_coverage ]]" == "true" ] && [ "${TOOLCHAIN}" == "gnu" ]; then
         COV_C_ARGS=-fprofile-update=atomic
         COV_MESON_BUILD_ARGS=-Db_coverage=true
+        mkdir -p ${BUILD_DIR}
+        touch ${BUILD_DIR}/.coverage-enable
       fi
     - meson setup ${BUILD_DIR}
         --cross-file .gitlab-ci.d/meson-cross/${TARGET}-${TOOLCHAIN}.meson
         -Dc_args="${COV_C_ARGS}" ${COV_MESON_BUILD_ARGS}
     - meson compile -C ${BUILD_DIR}
   artifacts:
+    when: always
     paths:
       - ${BUILD_DIR}/

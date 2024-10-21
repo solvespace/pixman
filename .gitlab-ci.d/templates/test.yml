@@ -87,7 +87,6 @@ spec:
   variables:
     TARGET: $[[ inputs.target ]]
     TEST_TIMEOUT_MULTIPLIER: $[[ inputs.test_timeout_multiplier ]]
-    GCOVR_FLAGS: $[[ inputs.gcovr_flags ]]
     MESON_ARGS: -t ${TEST_TIMEOUT_MULTIPLIER} --no-rebuild -v ${TEST_NAME}
     MESON_TESTTHREADS: $[[ inputs.meson_testthreads ]]
   parallel:
@@ -97,13 +96,17 @@ spec:
         QEMU_CPU: $[[ inputs.qemu_cpu ]]
   script:
     - meson test -C ${BUILD_DIR} ${MESON_ARGS}
-  after_script:
+
+    # Generate coverage report.
     - mkdir -p ${COVERAGE_OUT}
-    - gcovr ${GCOVR_FLAGS} -r ./ ${BUILD_DIR} -e ./subprojects
-        --json ${COVERAGE_OUT}.json
-        --html-details ${COVERAGE_OUT}/coverage.html
-        --print-summary || echo "No coverage data available."
+    - if [ -f "${BUILD_DIR}/.coverage-enable" ]; then
+        gcovr $[[ inputs.gcovr_flags ]] -r ./ ${BUILD_DIR} -e ./subprojects
+          --json ${COVERAGE_OUT}.json
+          --html-details ${COVERAGE_OUT}/coverage.html
+          --print-summary;
+      fi
   artifacts:
+    when: always
     paths:
       - ${BUILD_DIR}/meson-logs/testlog.txt
       - ${COVERAGE_BASE_DIR}/

@@ -39,9 +39,10 @@ summary:
         --txt --print-summary
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   artifacts:
+    when: always
     reports:
       coverage_report:
         coverage_format: cobertura
         path: ${COVERAGE_SUMMARY_DIR}/coverage.xml
     paths:
-      - ${COVERAGE_SUMMARY_DIR}/
+      - ${COVERAGE_BASE_DIR}/

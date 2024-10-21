@@ -45,6 +45,7 @@ include:
       target: linux-mips
       toolchain: [llvm]
       qemu_cpu: 74Kf
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0
@@ -64,6 +65,7 @@ include:
       target: linux-mipsel
       toolchain: [llvm]
       qemu_cpu: 74Kf
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0

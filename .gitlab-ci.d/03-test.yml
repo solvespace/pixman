@@ -44,6 +44,7 @@ include:
         - "sse2 ssse3"
         - "mmx ssse3"
         - "mmx sse2"
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0
@@ -75,6 +76,7 @@ include:
       timeout: 3h
       test_timeout_multiplier: 40
       meson_testthreads: 1
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0
@@ -91,6 +93,7 @@ include:
       target: linux-mips
       toolchain: [gnu]  # TODO: Add llvm once the build is fixed.
       qemu_cpu: [74Kf]
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true  # Some tests seem to fail.
       retry: 0
@@ -106,6 +109,7 @@ include:
       target: linux-mips64el
       toolchain: [llvm]
       qemu_cpu: [Loongson-3A4000]
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0
@@ -121,6 +125,7 @@ include:
     inputs:
       target: linux-ppc
       qemu_cpu: [g4]
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true  # SIGILL for some tests
       retry: 0
@@ -128,6 +133,7 @@ include:
     inputs:
       target: linux-ppc64
       qemu_cpu: [ppc64]
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true  # SIGSEGV for some tests
       retry: 0
@@ -143,6 +149,7 @@ include:
       target: linux-ppc64le
       toolchain: [llvm]
       qemu_cpu: [power10]
+      job_name_prefix: "."
       job_name_suffix: ":failing"
       allow_failure: true
       retry: 0

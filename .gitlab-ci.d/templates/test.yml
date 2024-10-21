@@ -44,6 +44,11 @@ spec:
       description:
         Additional flags passed to gcovr tool.
       default: ""
+    job_name_prefix:
+      description:
+        Additional prefix for the job name. Can be used to disable a job with a
+        "." prefix.
+      default: ""
     job_name_suffix:
       description:
         Additional suffix for the job name. Can be used to prevent job
@@ -63,7 +68,7 @@ spec:
       default: 1
 ---
 
-"test:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":
+"$[[ inputs.job_name_prefix ]]test:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":
   extends: .target:all
   stage: test
   allow_failure: $[[ inputs.allow_failure ]]

@@ -21,26 +21,11 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-386
-      toolchain: [gnu]
+      toolchain: [gnu]  # TODO LLVM issue: https://gitlab.freedesktop.org/pixman/pixman/-/issues/106
       pixman_disable:
         - "sse2 ssse3"  # Testing "mmx"
         - "mmx ssse3"  # Testing "sse2"
         - "mmx sse2"  # Testing "ssse3"
-  # TODO: Merge up after resolving
-  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/106
-  - local: .gitlab-ci.d/templates/test.yml
-    inputs:
-      target: linux-386
-      toolchain: [llvm]
-      pixman_disable:
-        # Same as above.
-        - "sse2 ssse3"
-        - "mmx ssse3"
-        - "mmx sse2"
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true
-      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-amd64
@@ -51,28 +36,15 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v5
-      toolchain: [gnu]
+      toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/107
       qemu_cpu: [arm1136]
       pixman_disable: ["arm-neon"] # Test only arm-simd.
       timeout: 3h
       test_timeout_multiplier: 40
-  # TODO: Merge up after resolving
-  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/107
-  - local: .gitlab-ci.d/templates/test.yml
-    inputs:
-      target: linux-arm-v5
-      toolchain: [llvm]
-      qemu_cpu: [arm1136]
-      pixman_disable: ["arm-neon"] # Test only arm-simd.
-      timeout: 3h
-      test_timeout_multiplier: 40
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true
-      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v7
+      toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/113
       qemu_cpu: [max]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
@@ -90,19 +62,8 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mips64le
-      toolchain: [gnu]
+      toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/108
       qemu_cpu: [Loongson-3A4000]
-  # TODO: Merge up after resolving
-  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/108
-  - local: .gitlab-ci.d/templates/test.yml
-    inputs:
-      target: linux-mips64le
-      toolchain: [llvm]
-      qemu_cpu: [Loongson-3A4000]
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true
-      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mipsel

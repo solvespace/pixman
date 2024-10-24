@@ -4,6 +4,8 @@
 # Expected GitLab CI variables:
 #   - RUNNER_TAG_DEFAULT – default GitLab CI runner tag. The `kvm` tag works on
 #     FDO infrastructure.
+#   - RUNNER_TAG_ARM – GitLab CI tag for ARM targets. Needs to have capability
+#     to run both 32 and 64-bit ARM binaries.
 
 stages:
   - docker
@@ -15,6 +17,7 @@ variables:
   # Default values for variables which are supposed to be overridden in the form
   # of GitLab CI variables.
   RUNNER_TAG_DEFAULT: kvm
+  RUNNER_TAG_ARM: kvm-aarch64
 
   # Docker image global configuration.
   DOCKER_TAG: latest

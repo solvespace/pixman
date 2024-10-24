@@ -41,15 +41,20 @@ include:
       pixman_disable: ["arm-neon"] # Test only arm-simd.
       timeout: 3h
       test_timeout_multiplier: 40
+      runner_tag: $RUNNER_TAG_ARM
+      docker_job: docker:${RUNNER_TAG_ARM}
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v7
       toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/113
       qemu_cpu: [max]
+      runner_tag: $RUNNER_TAG_ARM
+      docker_job: docker:${RUNNER_TAG_ARM}
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm64-v8
-      qemu_cpu: [max]
+      runner_tag: $RUNNER_TAG_ARM
+      docker_job: docker:${RUNNER_TAG_ARM}
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mips

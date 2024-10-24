@@ -69,6 +69,9 @@ spec:
     runner_tag:
       description: GitLab runner tag for this job.
       default: $RUNNER_TAG_DEFAULT
+    docker_job:
+      description: Docker image build job name.
+      default: docker:${RUNNER_TAG_DEFAULT}
 ---
 
 "$[[ inputs.job_name_prefix ]]test:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":
@@ -80,7 +83,7 @@ spec:
   retry: $[[ inputs.retry ]]
   timeout: $[[ inputs.timeout ]]
   needs:
-    - job: docker
+    - job: $[[ inputs.docker_job | expand_vars ]]
       optional: true
       parallel:
         matrix:

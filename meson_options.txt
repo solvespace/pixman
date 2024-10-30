@@ -64,6 +64,11 @@ option(
   description : 'Use MIPS32 DSPr2 intrinsic optimized paths',
 )
 option(
+  'rvv',
+  type : 'feature',
+  description : 'Use RISC-V Vector extension',
+)
+option(
   'gnu-inline-asm',
   type : 'feature',
   description : 'Use GNU style inline assembler',

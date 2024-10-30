@@ -57,6 +57,7 @@ simds = [
    ['pixman-arma64-neon-asm.S', 'pixman-arma64-neon-asm-bilinear.S']],
   ['mips-dspr2', have_mips_dspr2, mips_dspr2_flags,
    ['pixman-mips-dspr2-asm.S', 'pixman-mips-memcpy-asm.S']],
+   ['rvv', have_rvv, rvv_flags, []],
 ]
 
 foreach simd : simds
@@ -74,18 +75,15 @@ pixman_files = files(
   'pixman.c',
   'pixman-access.c',
   'pixman-access-accessors.c',
+  'pixman-arm.c',
   'pixman-bits-image.c',
   'pixman-combine32.c',
   'pixman-combine-float.c',
   'pixman-conical-gradient.c',
-  'pixman-filter.c',
-  'pixman-x86.c',
-  'pixman-mips.c',
-  'pixman-arm.c',
-  'pixman-ppc.c',
   'pixman-edge.c',
   'pixman-edge-accessors.c',
   'pixman-fast-path.c',
+  'pixman-filter.c',
   'pixman-glyph.c',
   'pixman-general.c',
   'pixman-gradient-walker.c',
@@ -93,14 +91,18 @@ pixman_files = files(
   'pixman-implementation.c',
   'pixman-linear-gradient.c',
   'pixman-matrix.c',
+  'pixman-mips.c',
   'pixman-noop.c',
+  'pixman-ppc.c',
   'pixman-radial-gradient.c',
   'pixman-region16.c',
   'pixman-region32.c',
+  'pixman-riscv.c',
   'pixman-solid-fill.c',
   'pixman-timer.c',
   'pixman-trap.c',
   'pixman-utils.c',
+  'pixman-x86.c',
 )
 
 # Android cpu-features

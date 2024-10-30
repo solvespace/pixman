@@ -34,6 +34,7 @@
 #include <float.h>
 
 #include "pixman-private.h"
+#include "pixman-combine-float.h"
 
 /* Workaround for http://gcc.gnu.org/PR54965 */
 /* GCC 4.6 has problems with force_inline, so just use normal inline instead */
@@ -148,23 +149,6 @@ combine_inner (pixman_bool_t component,
 /*
  * Porter/Duff operators
  */
-typedef enum
-{
-    ZERO,
-    ONE,
-    SRC_ALPHA,
-    DEST_ALPHA,
-    INV_SA,
-    INV_DA,
-    SA_OVER_DA,
-    DA_OVER_SA,
-    INV_SA_OVER_DA,
-    INV_DA_OVER_SA,
-    ONE_MINUS_SA_OVER_DA,
-    ONE_MINUS_DA_OVER_SA,
-    ONE_MINUS_INV_DA_OVER_SA,
-    ONE_MINUS_INV_SA_OVER_DA
-} combine_factor_t;
 
 #define CLAMP(f)					\
     (((f) < 0)? 0 : (((f) > 1.0) ? 1.0 : (f)))

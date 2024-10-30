@@ -365,6 +365,28 @@ elif use_mips_dspr2.enabled()
   error('MIPS DSPr2 Support unavailable, but required')
 endif
 
+use_rvv = get_option('rvv')
+have_rvv = false
+rvv_flags = ['-march=rv64gcv']
+if not use_rvv.disabled()
+  if host_machine.cpu_family() == 'riscv64'
+    if cc.compiles('''
+        #include <riscv_vector.h>
+        int main() { vfloat32m1_t tmp; return 0; }
+      ''',
+      args : rvv_flags,
+      name : 'RISC-V Vector Intrinsic Support')
+      have_rvv = true
+    endif
+  endif
+endif
+
+if have_rvv
+  config.set10('USE_RVV', true)
+elif use_rvv.enabled()
+  error('RISC-V Vector Support unavailable, but required')
+endif
+
 use_gnu_asm = get_option('gnu-inline-asm')
 if not use_gnu_asm.disabled()
   if cc.compiles('''

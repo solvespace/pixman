@@ -541,6 +541,15 @@ if cc.links('''
   config.set('TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR', 1)
 endif
 
+if cc.links('''
+    static int x = 1;
+    static void __attribute__((destructor)) destructor_function () { x = 0; }
+    int main (void) { return x; }
+    ''',
+    name : '__attribute__((destructor))')
+  config.set('TOOLCHAIN_SUPPORTS_ATTRIBUTE_DESTRUCTOR', 1)
+endif
+
 if cc.links(
     ' __float128 a = 1.0Q, b = 2.0Q; int main (void) { return a + b; }',
     name : 'Has float128 support')

@@ -23,8 +23,8 @@ project(
   ['c'],
   version : '0.44.1',
   license : 'MIT',
-  meson_version : '>= 0.52.0',
-  default_options : ['c_std=gnu99', 'buildtype=debugoptimized'],
+  meson_version : '>= 1.3.0',
+  default_options : ['c_std=gnu99,c99', 'buildtype=debugoptimized'],
 )
 
 config = configuration_data()
@@ -418,12 +418,6 @@ if cc.get_id() != 'msvc'
   dep_openmp = dependency('openmp', required : get_option('openmp'))
   if dep_openmp.found()
     config.set10('USE_OPENMP', true)
-  elif meson.version().version_compare('<0.51.0')
-  # In versions of meson before 0.51 the openmp dependency can still
-  # inject arguments in the the auto case when it is not found, the
-  # detection does work correctly in that case however, so we just
-  # replace dep_openmp with null_dep to work around this.
-    dep_openmp = null_dep
   endif
 else
   # the MSVC implementation of openmp is not compliant enough for our
@@ -592,7 +586,7 @@ add_project_arguments('-DHAVE_CONFIG_H', language : ['c'])
 subdir('pixman')
 
 if not get_option('tests').disabled() or not get_option('demos').disabled()
-  subdir(join_paths('test', 'utils'))
+  subdir('test/utils')
 endif
 
 if not get_option('demos').disabled()

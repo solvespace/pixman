@@ -367,7 +367,7 @@ endif
 
 use_rvv = get_option('rvv')
 have_rvv = false
-rvv_flags = ['-march=rv64gcv']
+rvv_flags = ['-march=rv64gcv1p0']
 if not use_rvv.disabled()
   if host_machine.cpu_family() == 'riscv64'
     if cc.compiles('''

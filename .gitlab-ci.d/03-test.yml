@@ -128,19 +128,7 @@ include:
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-ppc64le
-      toolchain: [gnu]
       qemu_cpu: [power10]
-  # TODO: Merge up after resolving
-  # https://gitlab.freedesktop.org/pixman/pixman/-/issues/109
-  - local: .gitlab-ci.d/templates/test.yml
-    inputs:
-      target: linux-ppc64le
-      toolchain: [llvm]
-      qemu_cpu: [power10]
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true
-      retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-riscv64

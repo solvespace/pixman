@@ -19,7 +19,7 @@ summary:
       optional: true
     - job: test:linux-arm64-v8
       optional: true
-    - job: test:linux-mips64el
+    - job: test:linux-mips64le
       optional: true
     - job: test:linux-ppc64le
       optional: true

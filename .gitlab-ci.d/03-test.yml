@@ -89,14 +89,14 @@ include:
       retry: 0
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
-      target: linux-mips64el
+      target: linux-mips64le
       toolchain: [gnu]
       qemu_cpu: [Loongson-3A4000]
   # TODO: Merge up after resolving
   # https://gitlab.freedesktop.org/pixman/pixman/-/issues/108
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
-      target: linux-mips64el
+      target: linux-mips64le
       toolchain: [llvm]
       qemu_cpu: [Loongson-3A4000]
       job_name_prefix: "."

@@ -53,7 +53,7 @@ include:
       retry: 0
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
-      target: linux-mips64el
+      target: linux-mips64le
       qemu_cpu: Loongson-3A4000
   - local: .gitlab-ci.d/templates/build.yml
     inputs:

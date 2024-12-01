@@ -20,7 +20,7 @@ variables:
   LOAD_TARGET_ENV: source .gitlab-ci.d/01-docker/target-env/${TARGET}.env
 
   # Enable/disable specific targets for code and platform coverage targets.
-  ACTIVE_TARGET_PATTERN: '/linux-386|linux-amd64|linux-arm-v5|linux-arm-v7|linux-arm64-v8|linux-mips|linux-mips64el|linux-mipsel|linux-ppc|linux-ppc64|linux-ppc64le|linux-riscv64|windows-686|windows-amd64|windows-arm64-v8/i'
+  ACTIVE_TARGET_PATTERN: '/linux-386|linux-amd64|linux-arm-v5|linux-arm-v7|linux-arm64-v8|linux-mips|linux-mips64le|linux-mipsel|linux-ppc|linux-ppc64|linux-ppc64le|linux-riscv64|windows-686|windows-amd64|windows-arm64-v8/i'
 
 workflow:
   rules:

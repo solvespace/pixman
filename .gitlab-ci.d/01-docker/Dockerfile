@@ -80,7 +80,7 @@ FROM native-base AS linux-amd64
 FROM native-base AS linux-arm-v5
 FROM native-base AS linux-arm-v7
 FROM native-base AS linux-arm64-v8
-FROM native-base AS linux-mips64el
+FROM native-base AS linux-mips64le
 FROM native-base AS linux-mipsel
 FROM native-base AS linux-ppc64le
 FROM native-base AS linux-riscv64

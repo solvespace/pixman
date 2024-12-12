@@ -315,42 +315,6 @@ unpackhi_128_16x8 (vector unsigned int data1, vector unsigned int data2)
     return (vector unsigned int) hi;
 }
 
-static force_inline vector unsigned int
-unpacklo_128_8x16 (vector unsigned int data1, vector unsigned int data2)
-{
-    vector unsigned short lo;
-
-    /* unpack to char */
-    lo = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergel ((vector unsigned short) data2,
-		    (vector unsigned short) data1);
-#else
-	vec_mergel ((vector unsigned short) data1,
-		    (vector unsigned short) data2);
-#endif
-
-    return (vector unsigned int) lo;
-}
-
-static force_inline vector unsigned int
-unpackhi_128_8x16 (vector unsigned int data1, vector unsigned int data2)
-{
-    vector unsigned short hi;
-
-    /* unpack to char */
-    hi = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergeh ((vector unsigned short) data2,
-		    (vector unsigned short) data1);
-#else
-	vec_mergeh ((vector unsigned short) data1,
-		    (vector unsigned short) data2);
-#endif
-
-    return (vector unsigned int) hi;
-}
-
 static force_inline void
 unpack_128_2x128 (vector unsigned int data1, vector unsigned int data2,
 		    vector unsigned int* data_lo, vector unsigned int* data_hi)

@@ -33,8 +33,7 @@
 #include "pixman-inlines.h"
 #include <altivec.h>
 
-#define AVV(x...) {x}
-
+static const vector unsigned char vzero = (const vector unsigned char){0};
 static vector unsigned char mask_ff000000;
 
 static force_inline vector unsigned char
@@ -119,10 +118,8 @@ pix_multiply (vector unsigned char p, vector unsigned char a)
     vector unsigned short hi, lo, mod;
 
     /* unpack to short */
-    hi = (vector unsigned short)
-	unpackhi_128_16x8(p, (vector unsigned char) AVV (0));
-    mod = (vector unsigned short)
-	unpackhi_128_16x8(a, (vector unsigned char) AVV (0));
+    hi = (vector unsigned short) unpackhi_128_16x8(p, vzero);
+    mod = (vector unsigned short) unpackhi_128_16x8(a, vzero);
 
     hi = vec_mladd (hi, mod, create_mask_16_128(128));
 
@@ -131,10 +128,8 @@ pix_multiply (vector unsigned char p, vector unsigned char a)
     hi = vec_sr (hi, vec_splat_u16 (8));
 
     /* unpack to short */
-    lo = (vector unsigned short)
-	unpacklo_128_16x8(p, (vector unsigned char) AVV (0));
-    mod = (vector unsigned short)
-	unpacklo_128_16x8(a, (vector unsigned char) AVV (0));
+    lo = (vector unsigned short) unpacklo_128_16x8(p, vzero);
+    mod = (vector unsigned short) unpacklo_128_16x8(a, vzero);
 
     lo = vec_mladd (lo, mod, create_mask_16_128(128));
 
@@ -308,13 +303,13 @@ is_opaque (vector unsigned char x)
 static force_inline int
 is_zero (vector unsigned char x)
 {
-    return vec_all_eq (x, (vector unsigned char) AVV (0));
+    return vec_all_eq (x, vzero);
 }
 
 static force_inline int
 is_transparent (vector unsigned char x)
 {
-    return vec_all_eq (vec_and (x, mask_ff000000), (vector unsigned char) AVV (0));
+    return vec_all_eq (vec_and (x, mask_ff000000), vzero);
 }
 
 static force_inline uint32_t
@@ -357,7 +352,7 @@ combine4 (const uint32_t* ps, const uint32_t* pm)
 	msk = load_128_unaligned(pm);
 
 	if (is_transparent(msk))
-	    return (vector unsigned char)AVV (0);
+	    return vzero;
     }
 
     src = load_128_unaligned(ps);
@@ -2650,7 +2645,7 @@ vmx_composite_over_n_8888_8888_ca (pixman_implementation_t *imp,
 	    /* pm is NOT necessarily 16-byte aligned */
 	    vmask = load_128_unaligned (pm);
 
-	    pack_cmp = vec_all_eq(vmask, (vector unsigned char) AVV(0));
+	    pack_cmp = vec_all_eq(vmask, vzero);
 
 	    /* if all bits in mask are zero, pack_cmp is not 0 */
 	    if (pack_cmp == 0)
@@ -2952,9 +2947,9 @@ vmx_fetch_a8 (pixman_iter_t *iter, const uint32_t *mask)
     {
 	vmx0 = load_128_unaligned((uint32_t *) src);
 
-	unpack_128_2x128((vector unsigned char) AVV(0), vmx0, &vmx1, &vmx2);
-	unpack_128_2x128((vector unsigned char) AVV(0), vmx1, &vmx3, &vmx4);
-	unpack_128_2x128((vector unsigned char) AVV(0), vmx2, &vmx5, &vmx6);
+	unpack_128_2x128(vzero, vmx0, &vmx1, &vmx2);
+	unpack_128_2x128(vzero, vmx1, &vmx3, &vmx4);
+	unpack_128_2x128(vzero, vmx2, &vmx5, &vmx6);
 
 	save_128_aligned(dst, vmx6);
 	save_128_aligned((dst +  4), vmx5);

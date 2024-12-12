@@ -73,34 +73,23 @@ create_mask_16_128 (uint32_t mask)
 static force_inline vector unsigned char
 unpacklo_128_16x8 (vector unsigned char data1, vector unsigned char data2)
 {
-    vector unsigned char lo;
-
-    /* unpack to short */
-    lo =
 #ifdef WORDS_BIGENDIAN
-	vec_mergel (data2, data1);
+    return vec_mergel (data2, data1);
 #else
-	vec_mergel (data1, data2);
+    return vec_mergel (data1, data2);
 #endif
-
-    return lo;
 }
 
 static force_inline vector unsigned char
 unpackhi_128_16x8 (vector unsigned char data1, vector unsigned char data2)
 {
-    vector unsigned char hi;
-
-    /* unpack to short */
-    hi =
 #ifdef WORDS_BIGENDIAN
-	vec_mergeh (data2, data1);
+    return vec_mergeh (data2, data1);
 #else
-	vec_mergeh (data1, data2);
+    return vec_mergeh (data1, data2);
 #endif
-
-    return hi;
 }
+
 
 static force_inline void
 unpack_128_2x128 (vector unsigned char  data1,

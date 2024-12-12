@@ -2800,6 +2800,7 @@ scaled_nearest_scanline_vmx_8888_8888_OVER (uint32_t*       pd,
     }
 }
 
+/* clang-format off */
 FAST_NEAREST_MAINLOOP (vmx_8888_8888_cover_OVER,
 		       scaled_nearest_scanline_vmx_8888_8888_OVER,
 		       uint32_t, uint32_t, COVER)
@@ -2846,6 +2847,7 @@ static const pixman_fast_path_t vmx_fast_paths[] =
 
     {   PIXMAN_OP_NONE	},
 };
+/* clang-format on */
 
 static uint32_t *
 vmx_fetch_x8r8g8b8 (pixman_iter_t *iter, const uint32_t *mask)
@@ -2928,6 +2930,7 @@ vmx_fetch_a8 (pixman_iter_t *iter, const uint32_t *mask)
     (FAST_PATH_STANDARD_FLAGS | FAST_PATH_ID_TRANSFORM |		\
      FAST_PATH_BITS_IMAGE | FAST_PATH_SAMPLES_COVER_CLIP_NEAREST)
 
+/* clang-format off */
 static const pixman_iter_info_t vmx_iters[] =
 {
     { PIXMAN_x8r8g8b8, IMAGE_FLAGS, ITER_NARROW,
@@ -2938,6 +2941,7 @@ static const pixman_iter_info_t vmx_iters[] =
     },
     { PIXMAN_null },
 };
+/* clang-format on */
 
 pixman_implementation_t *
 _pixman_implementation_create_vmx (pixman_implementation_t *fallback)

@@ -63,28 +63,61 @@ splat_pixel (vector unsigned int pix)
 }
 
 static force_inline vector unsigned int
+unpacklo_128_16x8 (vector unsigned int data1, vector unsigned int data2)
+{
+    vector unsigned char lo;
+
+    /* unpack to short */
+    lo = (vector unsigned char)
+#ifdef WORDS_BIGENDIAN
+	vec_mergel ((vector unsigned char) data2,
+		    (vector unsigned char) data1);
+#else
+	vec_mergel ((vector unsigned char) data1,
+		    (vector unsigned char) data2);
+#endif
+
+    return (vector unsigned int) lo;
+}
+
+static force_inline vector unsigned int
+unpackhi_128_16x8 (vector unsigned int data1, vector unsigned int data2)
+{
+    vector unsigned char hi;
+
+    /* unpack to short */
+    hi = (vector unsigned char)
+#ifdef WORDS_BIGENDIAN
+	vec_mergeh ((vector unsigned char) data2,
+		    (vector unsigned char) data1);
+#else
+	vec_mergeh ((vector unsigned char) data1,
+		    (vector unsigned char) data2);
+#endif
+
+    return (vector unsigned int) hi;
+}
+
+static force_inline void
+unpack_128_2x128 (vector unsigned int  data1,
+		  vector unsigned int  data2,
+		  vector unsigned int *data_lo,
+		  vector unsigned int *data_hi)
+{
+    *data_lo = unpacklo_128_16x8 (data1, data2);
+    *data_hi = unpackhi_128_16x8 (data1, data2);
+}
+
+static force_inline vector unsigned int
 pix_multiply (vector unsigned int p, vector unsigned int a)
 {
     vector unsigned short hi, lo, mod;
 
     /* unpack to short */
     hi = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergeh ((vector unsigned char)AVV (0),
-		    (vector unsigned char)p);
-#else
-	vec_mergeh ((vector unsigned char) p,
-		    (vector unsigned char) AVV (0));
-#endif
-
+	unpackhi_128_16x8(p, (vector unsigned int) AVV (0));
     mod = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergeh ((vector unsigned char)AVV (0),
-		    (vector unsigned char)a);
-#else
-	vec_mergeh ((vector unsigned char) a,
-		    (vector unsigned char) AVV (0));
-#endif
+	unpackhi_128_16x8(a, (vector unsigned int) AVV (0));
 
     hi = vec_mladd (hi, mod, (vector unsigned short)
                     AVV (0x0080, 0x0080, 0x0080, 0x0080,
@@ -96,22 +129,9 @@ pix_multiply (vector unsigned int p, vector unsigned int a)
 
     /* unpack to short */
     lo = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergel ((vector unsigned char)AVV (0),
-		    (vector unsigned char)p);
-#else
-	vec_mergel ((vector unsigned char) p,
-		    (vector unsigned char) AVV (0));
-#endif
-
+	unpacklo_128_16x8(p, (vector unsigned int) AVV (0));
     mod = (vector unsigned short)
-#ifdef WORDS_BIGENDIAN
-	vec_mergel ((vector unsigned char)AVV (0),
-		    (vector unsigned char)a);
-#else
-	vec_mergel ((vector unsigned char) a,
-		    (vector unsigned char) AVV (0));
-#endif
+	unpacklo_128_16x8(a, (vector unsigned int) AVV (0));
 
     lo = vec_mladd (lo, mod, (vector unsigned short)
                     AVV (0x0080, 0x0080, 0x0080, 0x0080,
@@ -277,50 +297,6 @@ static force_inline vector unsigned int
 create_mask_32_128 (uint32_t mask)
 {
     return (vector unsigned int) {mask, mask, mask, mask};
-}
-
-static force_inline vector unsigned int
-unpacklo_128_16x8 (vector unsigned int data1, vector unsigned int data2)
-{
-    vector unsigned char lo;
-
-    /* unpack to short */
-    lo = (vector unsigned char)
-#ifdef WORDS_BIGENDIAN
-	vec_mergel ((vector unsigned char) data2,
-		    (vector unsigned char) data1);
-#else
-	vec_mergel ((vector unsigned char) data1,
-		    (vector unsigned char) data2);
-#endif
-
-    return (vector unsigned int) lo;
-}
-
-static force_inline vector unsigned int
-unpackhi_128_16x8 (vector unsigned int data1, vector unsigned int data2)
-{
-    vector unsigned char hi;
-
-    /* unpack to short */
-    hi = (vector unsigned char)
-#ifdef WORDS_BIGENDIAN
-	vec_mergeh ((vector unsigned char) data2,
-		    (vector unsigned char) data1);
-#else
-	vec_mergeh ((vector unsigned char) data1,
-		    (vector unsigned char) data2);
-#endif
-
-    return (vector unsigned int) hi;
-}
-
-static force_inline void
-unpack_128_2x128 (vector unsigned int data1, vector unsigned int data2,
-		    vector unsigned int* data_lo, vector unsigned int* data_hi)
-{
-    *data_lo = unpacklo_128_16x8(data1, data2);
-    *data_hi = unpackhi_128_16x8(data1, data2);
 }
 
 static force_inline int

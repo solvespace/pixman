@@ -359,14 +359,6 @@ unpack_128_2x128 (vector unsigned int data1, vector unsigned int data2,
     *data_hi = unpackhi_128_16x8(data1, data2);
 }
 
-static force_inline void
-unpack_128_2x128_16 (vector unsigned int data1, vector unsigned int data2,
-		    vector unsigned int* data_lo, vector unsigned int* data_hi)
-{
-    *data_lo = unpacklo_128_8x16(data1, data2);
-    *data_hi = unpackhi_128_8x16(data1, data2);
-}
-
 static force_inline int
 is_opaque (vector unsigned int x)
 {
@@ -3019,8 +3011,8 @@ vmx_fetch_a8 (pixman_iter_t *iter, const uint32_t *mask)
 	vmx0 = load_128_unaligned((uint32_t *) src);
 
 	unpack_128_2x128((vector unsigned int) AVV(0), vmx0, &vmx1, &vmx2);
-	unpack_128_2x128_16((vector unsigned int) AVV(0), vmx1, &vmx3, &vmx4);
-	unpack_128_2x128_16((vector unsigned int) AVV(0), vmx2, &vmx5, &vmx6);
+	unpack_128_2x128((vector unsigned int) AVV(0), vmx1, &vmx3, &vmx4);
+	unpack_128_2x128((vector unsigned int) AVV(0), vmx2, &vmx5, &vmx6);
 
 	save_128_aligned(dst, vmx6);
 	save_128_aligned((dst +  4), vmx5);

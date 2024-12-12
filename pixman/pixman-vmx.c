@@ -176,9 +176,14 @@ over (vector unsigned char src,
 }
 
 /* in == pix_multiply */
-#define in_over(src, srca, mask, dest)					\
-    over (pix_multiply (src, mask),					\
-          pix_multiply (srca, mask), dest)
+static force_inline vector unsigned char
+in_over (vector unsigned char src,
+	 vector unsigned char srca,
+	 vector unsigned char mask,
+	 vector unsigned char dest)
+{
+    return over (pix_multiply (src, mask), pix_multiply (srca, mask), dest);
+}
 
 #ifdef WORDS_BIGENDIAN
 

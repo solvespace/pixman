@@ -62,6 +62,13 @@ splat_pixel (vector unsigned char pix)
 			 0x02, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03));
 }
 
+static force_inline vector unsigned short
+create_mask_16_128 (uint32_t mask)
+{
+    return (vector unsigned short){mask, mask, mask, mask,
+				   mask, mask, mask, mask};
+}
+
 static force_inline vector unsigned char
 unpacklo_128_16x8 (vector unsigned char data1, vector unsigned char data2)
 {
@@ -115,9 +122,7 @@ pix_multiply (vector unsigned char p, vector unsigned char a)
     mod = (vector unsigned short)
 	unpackhi_128_16x8(a, (vector unsigned char) AVV (0));
 
-    hi = vec_mladd (hi, mod, (vector unsigned short)
-                    AVV (0x0080, 0x0080, 0x0080, 0x0080,
-                         0x0080, 0x0080, 0x0080, 0x0080));
+    hi = vec_mladd (hi, mod, create_mask_16_128(128));
 
     hi = vec_adds (hi, vec_sr (hi, vec_splat_u16 (8)));
 
@@ -129,9 +134,7 @@ pix_multiply (vector unsigned char p, vector unsigned char a)
     mod = (vector unsigned short)
 	unpacklo_128_16x8(a, (vector unsigned char) AVV (0));
 
-    lo = vec_mladd (lo, mod, (vector unsigned short)
-                    AVV (0x0080, 0x0080, 0x0080, 0x0080,
-                         0x0080, 0x0080, 0x0080, 0x0080));
+    lo = vec_mladd (lo, mod, create_mask_16_128(128));
 
     lo = vec_adds (lo, vec_sr (lo, vec_splat_u16 (8)));
 

@@ -353,7 +353,6 @@ vmx_combine_over_u_no_mask (uint32_t *      dest,
                             const uint32_t *src,
                             int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -372,7 +371,7 @@ vmx_combine_over_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 
 	LOAD_VECTORS (dest, src);
@@ -385,7 +384,7 @@ vmx_combine_over_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -403,7 +402,6 @@ vmx_combine_over_u_mask (uint32_t *      dest,
                          const uint32_t *mask,
                          int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -427,7 +425,7 @@ vmx_combine_over_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -440,7 +438,7 @@ vmx_combine_over_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -475,7 +473,6 @@ vmx_combine_over_reverse_u_no_mask (uint32_t *      dest,
                                     const uint32_t *src,
                                     int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -493,7 +490,7 @@ vmx_combine_over_reverse_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 
 	LOAD_VECTORS (dest, src);
@@ -506,7 +503,7 @@ vmx_combine_over_reverse_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -523,7 +520,6 @@ vmx_combine_over_reverse_u_mask (uint32_t *      dest,
                                  const uint32_t *mask,
                                  int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -545,7 +541,7 @@ vmx_combine_over_reverse_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 
 	LOAD_VECTORSM (dest, src, mask);
@@ -559,7 +555,7 @@ vmx_combine_over_reverse_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -592,7 +588,6 @@ vmx_combine_in_u_no_mask (uint32_t *      dest,
                           const uint32_t *src,
                           int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -609,7 +604,7 @@ vmx_combine_in_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -621,7 +616,7 @@ vmx_combine_in_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t a = ALPHA_8 (dest[i]);
@@ -637,7 +632,6 @@ vmx_combine_in_u_mask (uint32_t *      dest,
                        const uint32_t *mask,
                        int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -658,7 +652,7 @@ vmx_combine_in_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -671,7 +665,7 @@ vmx_combine_in_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -703,7 +697,6 @@ vmx_combine_in_reverse_u_no_mask (uint32_t *      dest,
                                   const uint32_t *src,
                                   int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -721,7 +714,7 @@ vmx_combine_in_reverse_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -733,7 +726,7 @@ vmx_combine_in_reverse_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t d = dest[i];
 	uint32_t a = ALPHA_8 (src[i]);
@@ -750,7 +743,6 @@ vmx_combine_in_reverse_u_mask (uint32_t *      dest,
                                const uint32_t *mask,
                                int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -772,7 +764,7 @@ vmx_combine_in_reverse_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -785,7 +777,7 @@ vmx_combine_in_reverse_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t d = dest[i];
@@ -818,7 +810,6 @@ vmx_combine_out_u_no_mask (uint32_t *      dest,
                            const uint32_t *src,
                            int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -836,7 +827,7 @@ vmx_combine_out_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -848,7 +839,7 @@ vmx_combine_out_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t a = ALPHA_8 (~dest[i]);
@@ -865,7 +856,6 @@ vmx_combine_out_u_mask (uint32_t *      dest,
                         const uint32_t *mask,
                         int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -886,7 +876,7 @@ vmx_combine_out_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -899,7 +889,7 @@ vmx_combine_out_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -931,7 +921,6 @@ vmx_combine_out_reverse_u_no_mask (uint32_t *      dest,
                                    const uint32_t *src,
                                    int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -949,7 +938,7 @@ vmx_combine_out_reverse_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 
 	LOAD_VECTORS (dest, src);
@@ -962,7 +951,7 @@ vmx_combine_out_reverse_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t d = dest[i];
 	uint32_t a = ALPHA_8 (~src[i]);
@@ -979,7 +968,6 @@ vmx_combine_out_reverse_u_mask (uint32_t *      dest,
                                 const uint32_t *mask,
                                 int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1001,7 +989,7 @@ vmx_combine_out_reverse_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -1014,7 +1002,7 @@ vmx_combine_out_reverse_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t d = dest[i];
@@ -1047,7 +1035,6 @@ vmx_combine_atop_u_no_mask (uint32_t *      dest,
                             const uint32_t *src,
                             int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -1067,7 +1054,7 @@ vmx_combine_atop_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -1080,7 +1067,7 @@ vmx_combine_atop_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -1099,7 +1086,6 @@ vmx_combine_atop_u_mask (uint32_t *      dest,
                          const uint32_t *mask,
                          int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1125,7 +1111,7 @@ vmx_combine_atop_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -1139,7 +1125,7 @@ vmx_combine_atop_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -1176,7 +1162,6 @@ vmx_combine_atop_reverse_u_no_mask (uint32_t *      dest,
                                     const uint32_t *src,
                                     int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -1196,7 +1181,7 @@ vmx_combine_atop_reverse_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -1209,7 +1194,7 @@ vmx_combine_atop_reverse_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -1228,7 +1213,6 @@ vmx_combine_atop_reverse_u_mask (uint32_t *      dest,
                                  const uint32_t *mask,
                                  int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1254,7 +1238,7 @@ vmx_combine_atop_reverse_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -1268,7 +1252,7 @@ vmx_combine_atop_reverse_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -1305,7 +1289,6 @@ vmx_combine_xor_u_no_mask (uint32_t *      dest,
                            const uint32_t *src,
                            int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -1325,7 +1308,7 @@ vmx_combine_xor_u_no_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKS (dest, src);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -1338,7 +1321,7 @@ vmx_combine_xor_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -1357,7 +1340,6 @@ vmx_combine_xor_u_mask (uint32_t *      dest,
                         const uint32_t *mask,
                         int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1383,7 +1365,7 @@ vmx_combine_xor_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -1397,7 +1379,7 @@ vmx_combine_xor_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -1434,7 +1416,6 @@ vmx_combine_add_u_no_mask (uint32_t *      dest,
                            const uint32_t *src,
                            int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc;
     DECLARE_SRC_MASK_VAR;
 
@@ -1451,7 +1432,7 @@ vmx_combine_add_u_no_mask (uint32_t *      dest,
 
     COMPUTE_SHIFT_MASKS (dest, src);
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORS (dest, src);
 
@@ -1463,7 +1444,7 @@ vmx_combine_add_u_no_mask (uint32_t *      dest,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t s = src[i];
 	uint32_t d = dest[i];
@@ -1480,7 +1461,6 @@ vmx_combine_add_u_mask (uint32_t *      dest,
                         const uint32_t *mask,
                         int             width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1501,7 +1481,7 @@ vmx_combine_add_u_mask (uint32_t *      dest,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSM (dest, src, mask);
 
@@ -1514,7 +1494,7 @@ vmx_combine_add_u_mask (uint32_t *      dest,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t m = ALPHA_8 (mask[i]);
 	uint32_t s = src[i];
@@ -1549,7 +1529,6 @@ vmx_combine_src_ca (pixman_implementation_t *imp,
                     const uint32_t *         mask,
                     int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1568,7 +1547,7 @@ vmx_combine_src_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1581,7 +1560,7 @@ vmx_combine_src_ca (pixman_implementation_t *imp,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1600,7 +1579,6 @@ vmx_combine_over_ca (pixman_implementation_t *imp,
                      const uint32_t *         mask,
                      int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1623,7 +1601,7 @@ vmx_combine_over_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1636,7 +1614,7 @@ vmx_combine_over_ca (pixman_implementation_t *imp,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1659,7 +1637,6 @@ vmx_combine_over_reverse_ca (pixman_implementation_t *imp,
                              const uint32_t *         mask,
                              int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1681,7 +1658,7 @@ vmx_combine_over_reverse_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1694,7 +1671,7 @@ vmx_combine_over_reverse_ca (pixman_implementation_t *imp,
 	dest += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1716,7 +1693,6 @@ vmx_combine_in_ca (pixman_implementation_t *imp,
                    const uint32_t *         mask,
                    int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1737,7 +1713,7 @@ vmx_combine_in_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1750,7 +1726,7 @@ vmx_combine_in_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1771,7 +1747,6 @@ vmx_combine_in_reverse_ca (pixman_implementation_t *imp,
                            const uint32_t *         mask,
                            int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1792,7 +1767,7 @@ vmx_combine_in_reverse_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 
 	LOAD_VECTORSC (dest, src, mask);
@@ -1806,7 +1781,7 @@ vmx_combine_in_reverse_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t d = dest[i];
@@ -1827,7 +1802,6 @@ vmx_combine_out_ca (pixman_implementation_t *imp,
                     const uint32_t *         mask,
                     int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1849,7 +1823,7 @@ vmx_combine_out_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1863,7 +1837,7 @@ vmx_combine_out_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1885,7 +1859,6 @@ vmx_combine_out_reverse_ca (pixman_implementation_t *imp,
                             const uint32_t *         mask,
                             int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1907,7 +1880,7 @@ vmx_combine_out_reverse_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1921,7 +1894,7 @@ vmx_combine_out_reverse_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -1943,7 +1916,6 @@ vmx_combine_atop_ca (pixman_implementation_t *imp,
                      const uint32_t *         mask,
                      int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask, vsrca;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -1967,7 +1939,7 @@ vmx_combine_atop_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -1986,7 +1958,7 @@ vmx_combine_atop_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -2010,7 +1982,6 @@ vmx_combine_atop_reverse_ca (pixman_implementation_t *imp,
                              const uint32_t *         mask,
                              int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -2034,7 +2005,7 @@ vmx_combine_atop_reverse_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -2050,7 +2021,7 @@ vmx_combine_atop_reverse_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -2074,7 +2045,6 @@ vmx_combine_xor_ca (pixman_implementation_t *imp,
                     const uint32_t *         mask,
                     int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -2098,7 +2068,7 @@ vmx_combine_xor_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -2114,7 +2084,7 @@ vmx_combine_xor_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -2138,7 +2108,6 @@ vmx_combine_add_ca (pixman_implementation_t *imp,
                     const uint32_t *         mask,
                     int                      width)
 {
-    int i;
     vector unsigned char vdest, vsrc, vmask;
     DECLARE_SRC_MASK_VAR;
     DECLARE_MASK_MASK_VAR;
@@ -2159,7 +2128,7 @@ vmx_combine_add_ca (pixman_implementation_t *imp,
     COMPUTE_SHIFT_MASKC (dest, src, mask);
 
     /* printf ("%s\n",__PRETTY_FUNCTION__); */
-    for (i = width / 4; i > 0; i--)
+    for (int i = width / 4; i > 0; i--)
     {
 	LOAD_VECTORSC (dest, src, mask);
 
@@ -2172,7 +2141,7 @@ vmx_combine_add_ca (pixman_implementation_t *imp,
 	mask += 4;
     }
 
-    for (i = width % 4; --i >= 0;)
+    for (int i = width % 4; --i >= 0;)
     {
 	uint32_t a = mask[i];
 	uint32_t s = src[i];
@@ -2497,7 +2466,7 @@ vmx_composite_over_n_8888 (pixman_implementation_t *imp,
     PIXMAN_COMPOSITE_ARGS (info);
     uint32_t *dst_line, *dst;
     uint32_t src, ia;
-    int      i, w, dst_stride;
+    int      w, dst_stride;
 
     vector unsigned char vdst, vsrc, via;
 
@@ -2527,14 +2496,14 @@ vmx_composite_over_n_8888 (pixman_implementation_t *imp,
 	    w--;
 	}
 
-	for (i = w / 4; i > 0; i--)
+	for (int i = w / 4; i > 0; i--)
 	{
 	    vdst = pix_multiply (load_128_aligned (dst), via);
 	    save_128_aligned (dst, pix_add (vsrc, vdst));
 	    dst += 4;
 	}
 
-	for (i = w % 4; --i >= 0;)
+	for (int i = w % 4; --i >= 0;)
 	{
 	    uint32_t d = dst[i];
 	    UN8x4_MUL_UN8_ADD_UN8x4 (d, ia, src);

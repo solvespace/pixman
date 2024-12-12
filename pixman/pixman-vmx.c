@@ -36,11 +36,6 @@
 #define AVV(x...) {x}
 
 static vector unsigned int mask_ff000000;
-static vector unsigned int mask_red;
-static vector unsigned int mask_green;
-static vector unsigned int mask_blue;
-static vector unsigned int mask_565_fix_rb;
-static vector unsigned int mask_565_fix_g;
 
 static force_inline vector unsigned int
 splat_alpha (vector unsigned int pix)
@@ -370,27 +365,6 @@ unpack_128_2x128_16 (vector unsigned int data1, vector unsigned int data2,
 {
     *data_lo = unpacklo_128_8x16(data1, data2);
     *data_hi = unpackhi_128_8x16(data1, data2);
-}
-
-static force_inline vector unsigned int
-unpack_565_to_8888 (vector unsigned int lo)
-{
-    vector unsigned int r, g, b, rb, t;
-
-    r = vec_and (vec_sl(lo, create_mask_32_128(8)), mask_red);
-    g = vec_and (vec_sl(lo, create_mask_32_128(5)), mask_green);
-    b = vec_and (vec_sl(lo, create_mask_32_128(3)), mask_blue);
-
-    rb = vec_or (r, b);
-    t  = vec_and (rb, mask_565_fix_rb);
-    t  = vec_sr (t, create_mask_32_128(5));
-    rb = vec_or (rb, t);
-
-    t  = vec_and (g, mask_565_fix_g);
-    t  = vec_sr (t, create_mask_32_128(6));
-    g  = vec_or (g, t);
-
-    return vec_or (rb, g);
 }
 
 static force_inline int
@@ -3089,11 +3063,6 @@ _pixman_implementation_create_vmx (pixman_implementation_t *fallback)
 
     /* VMX constants */
     mask_ff000000 = create_mask_32_128 (0xff000000);
-    mask_red   = create_mask_32_128 (0x00f80000);
-    mask_green = create_mask_32_128 (0x0000fc00);
-    mask_blue  = create_mask_32_128 (0x000000f8);
-    mask_565_fix_rb = create_mask_32_128 (0x00e000e0);
-    mask_565_fix_g = create_mask_32_128  (0x0000c000);
 
     /* Set up function pointers */
 

@@ -70,6 +70,12 @@ create_mask_16_128 (uint32_t mask)
 				   mask, mask, mask, mask};
 }
 
+static force_inline vector unsigned int
+create_mask_32_128 (uint32_t mask)
+{
+    return (vector unsigned int){mask, mask, mask, mask};
+}
+
 static force_inline vector unsigned char
 unpacklo_128_16x8 (vector unsigned char data1, vector unsigned char data2)
 {
@@ -89,7 +95,6 @@ unpackhi_128_16x8 (vector unsigned char data1, vector unsigned char data2)
     return vec_mergeh (data1, data2);
 #endif
 }
-
 
 static force_inline void
 unpack_128_2x128 (vector unsigned char  data1,
@@ -276,12 +281,6 @@ save_128_aligned (uint32_t* data,
 		  vector unsigned char vdata)
 {
     STORE_VECTOR(data)
-}
-
-static force_inline vector unsigned int
-create_mask_32_128 (uint32_t mask)
-{
-    return (vector unsigned int){mask, mask, mask, mask};
 }
 
 static force_inline int

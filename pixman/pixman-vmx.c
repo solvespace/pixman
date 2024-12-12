@@ -2230,7 +2230,7 @@ vmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
     PIXMAN_IMAGE_GET_LINE (
 	mask_image, mask_x, mask_y, uint8_t, mask_stride, mask_line, 1);
 
-    vsrc = (vector unsigned int) {src, src, src, src};
+    vsrc = create_mask_32_128 (src);
     valpha = splat_alpha(vsrc);
 
     while (height--)
@@ -2269,7 +2269,7 @@ vmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
 	    }
 	    else if (m)
 	    {
-		vmask = splat_pixel((vector unsigned int) {m, m, m, m});
+		vmask = splat_pixel(create_mask_32_128 (m));
 
 		/* dst is 16-byte aligned */
 		vdst = in_over (vsrc, valpha, vmask, load_128_aligned (dst));
@@ -2528,7 +2528,7 @@ vmx_composite_over_n_8888 (pixman_implementation_t *imp,
     PIXMAN_IMAGE_GET_LINE (
 	dest_image, dest_x, dest_y, uint32_t, dst_stride, dst_line, 1);
 
-    vsrc = (vector unsigned int){src, src, src, src};
+    vsrc = create_mask_32_128 (src);
     via = negate (splat_alpha (vsrc));
     ia = ALPHA_8 (~src);
 
@@ -2611,7 +2611,7 @@ vmx_composite_over_n_8888_8888_ca (pixman_implementation_t *imp,
     PIXMAN_IMAGE_GET_LINE (
 	mask_image, mask_x, mask_y, uint32_t, mask_stride, mask_line, 1);
 
-    vsrc = (vector unsigned int) {src, src, src, src};
+    vsrc = create_mask_32_128 (src);
     valpha = splat_alpha(vsrc);
     ia = ALPHA_8 (src);
 

@@ -107,36 +107,27 @@ unpack_128_2x128 (vector unsigned char  data1,
 }
 
 static force_inline vector unsigned char
-pix_multiply (vector unsigned char p, vector unsigned char a)
+pix_multiply (vector unsigned char a, vector unsigned char b)
 {
     const vector unsigned char sel = (vector unsigned char){
 #ifdef WORDS_BIGENDIAN
-	0x00, 0x02, 0x04, 0x06, 0x08, 0x0a, 0x0c, 0x0e,
-	0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e,
+	0x00, 0x10, 0x02, 0x12, 0x04, 0x14, 0x06, 0x16,
+	0x08, 0x18, 0x0a, 0x1a, 0x0c, 0x1c, 0x0e, 0x1e,
 #else
-	0x01, 0x03, 0x05, 0x07, 0x09, 0x0b, 0x0d, 0x1f,
-	0x11, 0x13, 0x15, 0x17, 0x19, 0x1b, 0x1d, 0x1f,
+	0x01, 0x11, 0x03, 0x13, 0x05, 0x15, 0x07, 0x17,
+	0x09, 0x19, 0x0b, 0x1b, 0x0d, 0x1d, 0x0f, 0x1f,
 #endif
     };
-    vector unsigned short hi, lo, mod;
+    vector unsigned short e = vec_mule (a, b);
+    vector unsigned short o = vec_mulo (a, b);
 
-    /* unpack to short */
-    hi = (vector unsigned short) unpackhi_128_16x8(p, vzero);
-    mod = (vector unsigned short) unpackhi_128_16x8(a, vzero);
+    e = vec_adds (e, create_mask_16_128 (128));
+    o = vec_adds (o, create_mask_16_128 (128));
 
-    hi = vec_mladd (hi, mod, create_mask_16_128(128));
+    e = vec_adds (e, vec_sr (e, vec_splat_u16 (8)));
+    o = vec_adds (o, vec_sr (o, vec_splat_u16 (8)));
 
-    hi = vec_adds (hi, vec_sr (hi, vec_splat_u16 (8)));
-
-    /* unpack to short */
-    lo = (vector unsigned short) unpacklo_128_16x8(p, vzero);
-    mod = (vector unsigned short) unpacklo_128_16x8(a, vzero);
-
-    lo = vec_mladd (lo, mod, create_mask_16_128(128));
-
-    lo = vec_adds (lo, vec_sr (lo, vec_splat_u16 (8)));
-
-    return (vector unsigned char)vec_perm (hi, lo, sel);
+    return (vector unsigned char)vec_perm (e, o, sel);
 }
 
 static force_inline vector unsigned char

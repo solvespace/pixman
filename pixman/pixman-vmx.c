@@ -2995,7 +2995,6 @@ static uint32_t *
 vmx_fetch_x8r8g8b8 (pixman_iter_t *iter, const uint32_t *mask)
 {
     int w = iter->width;
-    vector unsigned int ff000000 = mask_ff000000;
     uint32_t *dst = iter->buffer;
     uint32_t *src = (uint32_t *)iter->bits;
 
@@ -3009,7 +3008,7 @@ vmx_fetch_x8r8g8b8 (pixman_iter_t *iter, const uint32_t *mask)
 
     while (w >= 4)
     {
-	save_128_aligned(dst, vec_or(load_128_unaligned(src), ff000000));
+	save_128_aligned(dst, vec_or(load_128_unaligned(src), mask_ff000000));
 
 	dst += 4;
 	src += 4;

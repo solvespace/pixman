@@ -172,11 +172,7 @@ over (vector unsigned char src,
       vector unsigned char srca,
       vector unsigned char dest)
 {
-    vector unsigned char tmp =
-	pix_multiply (dest, negate (srca));
-
-    tmp = vec_adds (src, tmp);
-    return tmp;
+    return vec_adds (src, pix_multiply (dest, negate (srca)));
 }
 
 /* in == pix_multiply */

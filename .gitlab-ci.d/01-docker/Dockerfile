@@ -12,13 +12,13 @@ ENV APT_UPDATE="apt-get update" \
 
 ARG GCOVR_VERSION="~=7.2"
 ARG MESON_VERSION="~=1.6"
-RUN ${APT_UPDATE} \
+RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >  /etc/apt/sources.list.d/debian-12-backports.list \
+    && ${APT_UPDATE} \
     && ${APT_INSTALL} \
         # Build dependencies.
         build-essential \
         ninja-build \
         pkg-config \
-        qemu-user \
         # pipx dependencies.
         python3-argcomplete \
         python3-packaging \
@@ -30,6 +30,11 @@ RUN ${APT_UPDATE} \
         libxml2-dev \
         libxslt-dev \
         python3-dev \
+    # User bookworm-backports for QEMU, as it has version 7 by default, which
+    # has some issues.
+    && ${APT_INSTALL} \
+        $(grep bookworm /etc/os-release >/dev/null && echo -t bookworm-backports) \
+        qemu-user \
     && ${APT_CLEANUP} \
     # Install pipx using pip to have a more recent version of pipx, which
     # supports the `--global` flag.

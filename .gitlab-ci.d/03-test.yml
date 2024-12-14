@@ -113,18 +113,14 @@ include:
     inputs:
       target: linux-ppc
       qemu_cpu: [g4]
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true  # SIGILL for some tests
-      retry: 0
+      timeout: 2h
+      test_timeout_multiplier: 30
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-ppc64
-      qemu_cpu: [ppc64]
-      job_name_prefix: "."
-      job_name_suffix: ":failing"
-      allow_failure: true  # SIGSEGV for some tests
-      retry: 0
+      qemu_cpu: [power9]
+      timeout: 2h
+      test_timeout_multiplier: 30
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-ppc64le

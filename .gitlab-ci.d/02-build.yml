@@ -81,7 +81,7 @@ include:
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-ppc64
-      qemu_cpu: ppc64
+      qemu_cpu: power9
       enable_gnu_coverage: false
   - local: .gitlab-ci.d/templates/build.yml
     inputs:

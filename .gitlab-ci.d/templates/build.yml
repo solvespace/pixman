@@ -48,10 +48,10 @@ spec:
       default: 1
     runner_tag:
       description: GitLab runner tag for this job.
-      default: $RUNNER_TAG_DEFAULT
+      default: kvm
     docker_job:
       description: Docker image build job name.
-      default: docker:${RUNNER_TAG_DEFAULT}
+      default: docker:kvm
 ---
 
 "$[[ inputs.job_name_prefix ]]build:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":

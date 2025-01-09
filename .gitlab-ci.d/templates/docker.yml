@@ -18,7 +18,7 @@ spec:
       default: ""
     runner_tag:
       description: GitLab runner tag for this job.
-      default: $RUNNER_TAG_DEFAULT
+      default: kvm
 
 ---
 

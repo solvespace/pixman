@@ -7,7 +7,7 @@
 include:
   - local: .gitlab-ci.d/templates/docker.yml
     inputs:
-      runner_tag: $RUNNER_TAG_ARM
+      runner_tag: kvm-aarch64
       targets:
         - linux-arm-v5
         - linux-arm-v7
@@ -15,7 +15,7 @@ include:
         - windows-arm64-v8
   - local: .gitlab-ci.d/templates/docker.yml
     inputs:
-      runner_tag: $RUNNER_TAG_DEFAULT
+      runner_tag: kvm
       targets:
         - linux-386
         - linux-amd64

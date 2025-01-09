@@ -26,20 +26,20 @@ include:
       qemu_cpu: arm1136
       # Disable coverage, as the tests take too long to run with a single thread.
       enable_gnu_coverage: false
-      runner_tag: $RUNNER_TAG_ARM
-      docker_job: docker:${RUNNER_TAG_ARM}
+      runner_tag: kvm-aarch64
+      docker_job: docker:kvm-aarch64
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-arm-v7
       toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/113
       qemu_cpu: max
-      runner_tag: $RUNNER_TAG_ARM
-      docker_job: docker:${RUNNER_TAG_ARM}
+      runner_tag: kvm-aarch64
+      docker_job: docker:kvm-aarch64
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-arm64-v8
-      runner_tag: $RUNNER_TAG_ARM
-      docker_job: docker:${RUNNER_TAG_ARM}
+      runner_tag: kvm-aarch64
+      docker_job: docker:kvm-aarch64
   - local: .gitlab-ci.d/templates/build.yml
     inputs:
       target: linux-mips
@@ -88,5 +88,5 @@ include:
       target: windows-arm64-v8
       toolchain: [llvm]  # GNU toolchain doesn't seem to support Windows on ARM.
       enable_gnu_coverage: false
-      runner_tag: $RUNNER_TAG_ARM
-      docker_job: docker:${RUNNER_TAG_ARM}
+      runner_tag: kvm-aarch64
+      docker_job: docker:kvm-aarch64

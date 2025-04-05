@@ -11,7 +11,7 @@ ENV APT_UPDATE="apt-get update" \
     APT_CLEANUP="rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*"
 
 ARG GCOVR_VERSION="~=7.2"
-ARG MESON_VERSION="~=1.6"
+ARG MESON_VERSION="~=1.7"
 RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >  /etc/apt/sources.list.d/debian-12-backports.list \
     && ${APT_UPDATE} \
     && ${APT_INSTALL} \

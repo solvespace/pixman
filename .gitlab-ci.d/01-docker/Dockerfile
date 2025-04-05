@@ -108,7 +108,7 @@ RUN ${APT_UPDATE} \
 
 # Windows base image with a pre-built LLVM MinGW toolchain.
 FROM base AS windows-llvm-base
-ARG LLVM_MINGW_RELEASE=20241203
+ARG LLVM_MINGW_RELEASE=20250402
 ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-ucrt-ubuntu-20.04
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
@@ -179,7 +179,7 @@ RUN ${APT_UPDATE} \
         lld \
         llvm \
     && ${APT_CLEANUP}
-ARG WINE_VERSION=9.22
+ARG WINE_VERSION=10.5
 RUN git clone https://gitlab.winehq.org/wine/wine.git \
         -b wine-${WINE_VERSION} \
         --depth 1

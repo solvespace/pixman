@@ -112,7 +112,7 @@ rvv_blend_overlay (const vfloat32m1_t sa,
 		   size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4, f0, f1, f2;
-    vbool32_t             vb;
+    vbool32_t    vb;
     t0 = __riscv_vfadd_vv_f32m1 (d, d, vl);
     t1 = __riscv_vfmul_vv_f32m1 (__riscv_vfadd_vv_f32m1 (s, s, vl), d, vl);
     vb = __riscv_vmflt_vv_f32m1_b32 (t0, da, vl);
@@ -141,7 +141,7 @@ rvv_blend_darken (const vfloat32m1_t sa,
 		  size_t             vl)
 {
     vfloat32m1_t ss, dd;
-    vbool32_t             vb;
+    vbool32_t    vb;
     ss = __riscv_vfmul_vv_f32m1 (da, s, vl);
     dd = __riscv_vfmul_vv_f32m1 (sa, d, vl);
     vb = __riscv_vmfgt_vv_f32m1_b32 (ss, dd, vl);
@@ -164,7 +164,7 @@ rvv_blend_lighten (const vfloat32m1_t sa,
 		   size_t             vl)
 {
     vfloat32m1_t ss, dd;
-    vbool32_t             vb;
+    vbool32_t    vb;
     ss = __riscv_vfmul_vv_f32m1 (s, da, vl);
     dd = __riscv_vfmul_vv_f32m1 (d, sa, vl);
     vb = __riscv_vmfgt_vv_f32m1_b32 (ss, dd, vl);
@@ -198,7 +198,7 @@ rvv_blend_color_dodge (const vfloat32m1_t sa,
 		       size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4;
-    vbool32_t             is_d_zero, vb, is_t0_non_zero;
+    vbool32_t    is_d_zero, vb, is_t0_non_zero;
 
     is_d_zero = __riscv_vmfeq_vf_f32m1_b32 (d, 0.0f, vl);
 
@@ -296,7 +296,7 @@ rvv_blend_hard_light (const vfloat32m1_t sa,
 		      size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4;
-    vbool32_t             vb;
+    vbool32_t    vb;
     t0 = __riscv_vfadd_vv_f32m1 (s, s, vl);
     t1 = __riscv_vfmul_vv_f32m1 (__riscv_vfadd_vv_f32m1 (s, s, vl), d, vl);
     vb = __riscv_vmfgt_vv_f32m1_b32 (t0, sa, vl);
@@ -334,9 +334,8 @@ rvv_blend_soft_light (const vfloat32m1_t sa,
 		      const vfloat32m1_t d,
 		      size_t             vl)
 {
-    vfloat32m1_t t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12,
-	t13;
-    vbool32_t is_sa_lt_2s, is_da_ls_4d, is_da_non_zero;
+    vfloat32m1_t t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13;
+    vbool32_t    is_sa_lt_2s, is_da_ls_4d, is_da_non_zero;
     is_da_non_zero = __riscv_vmfne_vf_f32m1_b32 (da, 0.0f, vl);
     t0             = __riscv_vfadd_vv_f32m1 (s, s, vl); // 2 * s
     is_sa_lt_2s    = __riscv_vmflt_vv_f32m1_b32 (sa, t0, vl);
@@ -358,8 +357,8 @@ rvv_blend_soft_light (const vfloat32m1_t sa,
 					  __riscv_vfadd_vv_f32m1 (d, d, vl), vl);
     is_da_ls_4d = __riscv_vmflt_vv_f32m1_b32 (da, t6, vl);
     t10         = __riscv_vfsub_vv_f32m1 (
-		__riscv_vfsqrt_v_f32m1 (__riscv_vfmul_vv_f32m1 (d, da, vl), vl), d,
-		vl); // sqrtf (d * da) - d
+        __riscv_vfsqrt_v_f32m1 (__riscv_vfmul_vv_f32m1 (d, da, vl), vl), d,
+        vl); // sqrtf (d * da) - d
     t11 = __riscv_vfmul_vv_f32m1 (t2, t10,
 				  vl); // (sqrtf (d * da) - d) * (sa - 2 * s)
     t12 = __riscv_vfsub_vv_f32m1 (
@@ -404,7 +403,7 @@ rvv_blend_difference (const vfloat32m1_t sa,
 		      size_t             vl)
 {
     vfloat32m1_t dsa, sda;
-    vbool32_t             vb;
+    vbool32_t    vb;
     dsa = __riscv_vfmul_vv_f32m1 (d, sa, vl);
     sda = __riscv_vfmul_vv_f32m1 (s, da, vl);
     vb  = __riscv_vmflt_vv_f32m1_b32 (sda, dsa, vl);
@@ -759,8 +758,8 @@ rvv_get_factor (combine_factor_t factor,
 	const vfloat32m1_t fa = rvv_get_factor (a, sa, da, vl);                \
 	const vfloat32m1_t fb = rvv_get_factor (b, sa, da, vl);                \
 	vfloat32m1_t       t0 = __riscv_vfadd_vv_f32m1 (                       \
-		  __riscv_vfmul_vv_f32m1 (s, fa, vl),                          \
-		  __riscv_vfmul_vv_f32m1 (d, fb, vl), vl);                     \
+            __riscv_vfmul_vv_f32m1 (s, fa, vl),                          \
+            __riscv_vfmul_vv_f32m1 (d, fb, vl), vl);                     \
 	return __riscv_vfmin_vv_f32m1 (__riscv_vfmv_v_f_f32m1 (1.0f, vl), t0,  \
 				       vl);                                    \
     }                                                                          \
@@ -856,12 +855,13 @@ static const pixman_fast_path_t rvv_fast_paths[] = {
     {PIXMAN_OP_NONE},
 };
 
-// clang-format off
 pixman_implementation_t *
 _pixman_implementation_create_rvv (pixman_implementation_t *fallback)
 {
-    pixman_implementation_t *imp = _pixman_implementation_create (fallback, rvv_fast_paths);
+    pixman_implementation_t *imp = _pixman_implementation_create (
+	fallback, rvv_fast_paths);
 
+    // clang-format off
     imp->combine_float[PIXMAN_OP_CLEAR] = rvv_combine_clear_u_float;
     imp->combine_float[PIXMAN_OP_SRC] = rvv_combine_src_u_float;
     imp->combine_float[PIXMAN_OP_DST] = rvv_combine_dst_u_float;
@@ -955,7 +955,7 @@ _pixman_implementation_create_rvv (pixman_implementation_t *fallback)
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_OVER] = rvv_combine_conjoint_over_ca_float;
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_OVER_REVERSE] = rvv_combine_conjoint_over_reverse_ca_float;
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_IN] = rvv_combine_conjoint_in_ca_float;
-    imp->combine_float_ca[PIXMAN_OP_CONJOINT_IN_REVERSE] =rvv_combine_conjoint_in_reverse_ca_float;
+    imp->combine_float_ca[PIXMAN_OP_CONJOINT_IN_REVERSE] = rvv_combine_conjoint_in_reverse_ca_float;
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_OUT] = rvv_combine_conjoint_out_ca_float;
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_OUT_REVERSE] = rvv_combine_conjoint_out_reverse_ca_float;
     imp->combine_float_ca[PIXMAN_OP_CONJOINT_ATOP] = rvv_combine_conjoint_atop_ca_float;
@@ -983,5 +983,4 @@ _pixman_implementation_create_rvv (pixman_implementation_t *fallback)
 
     return imp;
 }
-
 // clang-format on

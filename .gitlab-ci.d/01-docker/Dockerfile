@@ -1,14 +1,15 @@
 ARG BASE_IMAGE=docker.io/debian
 ARG BASE_IMAGE_TAG=bookworm-slim
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS base
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS base-image
+
+ENV APT_UPDATE="apt-get update" \
+    APT_INSTALL="env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends" \
+    APT_CLEANUP="rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*"
+
+FROM base-image AS base
 
 LABEL org.opencontainers.image.title="Pixman build environment for platform coverage" \
       org.opencontainers.image.authors="Marek Pikuła <m.pikula@partner.samsung.com>"
-
-ARG DEBIAN_FRONTEND=noninteractive
-ENV APT_UPDATE="apt-get update" \
-    APT_INSTALL="apt-get install -y --no-install-recommends" \
-    APT_CLEANUP="rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*"
 
 ARG GCOVR_VERSION="~=7.2"
 ARG MESON_VERSION="~=1.7"
@@ -107,17 +108,24 @@ RUN ${APT_UPDATE} \
     && ${APT_CLEANUP}
 
 # Windows base image with a pre-built LLVM MinGW toolchain.
-FROM base AS windows-llvm-base
+FROM base-image AS windows-llvm-base-build
 ARG LLVM_MINGW_RELEASE=20250402
 ARG LLVM_MINGW_VARIANT=llvm-mingw-${LLVM_MINGW_RELEASE}-ucrt-ubuntu-20.04
 RUN ${APT_UPDATE} \
     && ${APT_INSTALL} \
-        procps \
+        ca-certificates \
         wget \
+        xz-utils \
     && ${APT_CLEANUP} \
     && wget https://github.com/mstorsjo/llvm-mingw/releases/download/${LLVM_MINGW_RELEASE}/${LLVM_MINGW_VARIANT}-`uname -m`.tar.xz \
         -O - | tar -xJ -C /opt \
     && mv /opt/llvm* /opt/llvm
+
+FROM base AS windows-llvm-base
+RUN ${APT_UPDATE} \
+    && ${APT_INSTALL} procps \
+    && ${APT_CLEANUP}
+COPY --from=windows-llvm-base-build /opt/llvm /opt/llvm
 ENV PATH=/opt/llvm/bin:${PATH} \
     # Inspired by https://code.videolan.org/videolan/docker-images
     WINE_BOOT='wine wineboot --init \

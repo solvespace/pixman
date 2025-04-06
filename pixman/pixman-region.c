@@ -402,6 +402,29 @@ PREFIX (_init_rect) (region_type_t *	region,
 }
 
 PIXMAN_EXPORT void
+PREFIX (_init_rectf) (region_type_t *	region,
+                      double		x,
+		      double		y,
+		      double		width,
+		      double		height)
+{
+    region->extents.x1 = x;
+    region->extents.y1 = y;
+    region->extents.x2 = x + width;
+    region->extents.y2 = y + height;
+
+    if (!GOOD_RECT (&region->extents))
+    {
+        if (BAD_RECT (&region->extents))
+            _pixman_log_error (FUNC, "Invalid rectangle passed");
+        PREFIX (_init) (region);
+        return;
+    }
+
+    region->data = NULL;
+}
+
+PIXMAN_EXPORT void
 PREFIX (_init_with_extents) (region_type_t *region, const box_type_t *extents)
 {
     if (!GOOD_RECT (extents))
@@ -1344,6 +1367,24 @@ PREFIX(_intersect_rect) (region_type_t *dest,
     return PREFIX(_intersect) (dest, source, &region);
 }
 
+PIXMAN_EXPORT pixman_bool_t
+PREFIX(_intersect_rectf) (region_type_t *dest,
+			  const region_type_t *source,
+			  double x, double y,
+			  double width,
+			  double height)
+{
+    region_type_t region;
+
+    region.data = NULL;
+    region.extents.x1 = x;
+    region.extents.y1 = y;
+    region.extents.x2 = x + width;
+    region.extents.y2 = y + height;
+
+    return PREFIX(_intersect) (dest, source, &region);
+}
+
 /* Convenience function for performing union of region with a
  * single rectangle
  */
@@ -1354,6 +1395,33 @@ PREFIX (_union_rect) (region_type_t *dest,
 		      int            y,
                       unsigned int   width,
 		      unsigned int   height)
+{
+    region_type_t region;
+
+    region.extents.x1 = x;
+    region.extents.y1 = y;
+    region.extents.x2 = x + width;
+    region.extents.y2 = y + height;
+
+    if (!GOOD_RECT (&region.extents))
+    {
+        if (BAD_RECT (&region.extents))
+            _pixman_log_error (FUNC, "Invalid rectangle passed");
+	return PREFIX (_copy) (dest, source);
+    }
+
+    region.data = NULL;
+
+    return PREFIX (_union) (dest, source, &region);
+}
+
+PIXMAN_EXPORT pixman_bool_t
+PREFIX (_union_rectf) (region_type_t *dest,
+                       const region_type_t *source,
+                       double         x,
+		       double         y,
+                       double         width,
+		       double         height)
 {
     region_type_t region;
 

@@ -797,6 +797,13 @@ void                    pixman_region64f_init_rect         (pixman_region64f_t *
 							    unsigned int        height);
 
 PIXMAN_API
+void                    pixman_region64f_init_rectf        (pixman_region64f_t *region,
+							    double              x,
+							    double              y,
+							    double              width,
+							    double              height);
+
+PIXMAN_API
 pixman_bool_t           pixman_region64f_init_rects        (pixman_region64f_t *region,
 							    const pixman_box64f_t *boxes,
 							    int                 count);
@@ -842,12 +849,28 @@ pixman_bool_t		pixman_region64f_intersect_rect    (pixman_region64f_t       *des
 							    unsigned int              height);
 
 PIXMAN_API
+pixman_bool_t		pixman_region64f_intersect_rectf   (pixman_region64f_t       *dest,
+							    const pixman_region64f_t *source,
+							    double                    x,
+							    double                    y,
+							    double                    width,
+							    double                    height);
+
+PIXMAN_API
 pixman_bool_t           pixman_region64f_union_rect        (pixman_region64f_t       *dest,
 							    const pixman_region64f_t *source,
 							    int                       x,
 							    int                       y,
 							    unsigned int              width,
 							    unsigned int              height);
+
+PIXMAN_API
+pixman_bool_t           pixman_region64f_union_rectf       (pixman_region64f_t       *dest,
+							    const pixman_region64f_t *source,
+							    double                    x,
+							    double                    y,
+							    double                    width,
+							    double                    height);
 
 PIXMAN_API
 pixman_bool_t           pixman_region64f_subtract          (pixman_region64f_t       *reg_d,

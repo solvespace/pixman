@@ -346,7 +346,11 @@ PREFIX (_print) (region_type_t *rgn)
     rects = PIXREGION_RECTS (rgn);
 
     fprintf (stderr, "num: %d size: %d\n", num, size);
-    fprintf (stderr, "extents: %d %d %d %d\n",
+    fprintf (stderr, "extents: "
+		     PRINT_SPECIFIER " "
+		     PRINT_SPECIFIER " "
+		     PRINT_SPECIFIER " "
+		     PRINT_SPECIFIER "\n",
              rgn->extents.x1,
 	     rgn->extents.y1,
 	     rgn->extents.x2,
@@ -354,7 +358,10 @@ PREFIX (_print) (region_type_t *rgn)
     
     for (i = 0; i < num; i++)
     {
-	fprintf (stderr, "%d %d %d %d \n",
+	fprintf (stderr, PRINT_SPECIFIER " "
+			 PRINT_SPECIFIER " "
+			 PRINT_SPECIFIER " "
+			 PRINT_SPECIFIER " \n",
 	         rects[i].x1, rects[i].y1, rects[i].x2, rects[i].y2);
     }
     

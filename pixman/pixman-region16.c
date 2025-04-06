@@ -47,6 +47,8 @@ typedef struct {
 #define PIXMAN_REGION_MAX INT16_MAX
 #define PIXMAN_REGION_MIN INT16_MIN
 
+#define PRINT_SPECIFIER "%d"
+
 #include "pixman-region.c"
 
 /* This function exists only to make it possible to preserve the X ABI -

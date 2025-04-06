@@ -45,4 +45,6 @@ typedef struct {
 #define PIXMAN_REGION_MAX INT32_MAX
 #define PIXMAN_REGION_MIN INT32_MIN
 
+#define PRINT_SPECIFIER "%d"
+
 #include "pixman-region.c"

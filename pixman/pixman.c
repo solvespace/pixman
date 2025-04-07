@@ -854,7 +854,7 @@ pixman_image_fill_rectangles (pixman_op_t                 op,
                               int                         n_rects,
                               const pixman_rectangle16_t *rects)
 {
-    pixman_box32_t stack_boxes[6];
+    pixman_box32_t stack_boxes[6] = {0};
     pixman_box32_t *boxes;
     pixman_bool_t result;
     int i;

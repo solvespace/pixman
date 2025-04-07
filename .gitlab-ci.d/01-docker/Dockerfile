@@ -28,9 +28,7 @@ RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >  /etc/apt/
         python3-userpath \
         python3-venv \
         # gcovr dependencies.
-        libxml2-dev \
-        libxslt-dev \
-        python3-dev \
+        python3-lxml \
     # User bookworm-backports for QEMU, as it has version 7 by default, which
     # has some issues.
     && ${APT_INSTALL} \
@@ -42,7 +40,7 @@ RUN echo "deb http://deb.debian.org/debian bookworm-backports main" >  /etc/apt/
     && pip install pipx --break-system-packages \
     # Install a recent version of meson and gcovr using pipx to have the same
     # version across all variants regardless of base.
-    && pipx install --global \
+    && pipx install --global --system-site-packages \
         gcovr${GCOVR_VERSION} \
         meson${MESON_VERSION} \
     && gcovr --version \

@@ -49,11 +49,11 @@
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_screen (const vfloat32m1_t sa,
-		  const vfloat32m1_t s,
-		  const vfloat32m1_t da,
-		  const vfloat32m1_t d,
-		  size_t             vl)
+rvv_blend_screen_float (const vfloat32m1_t sa,
+			const vfloat32m1_t s,
+			const vfloat32m1_t da,
+			const vfloat32m1_t d,
+			size_t             vl)
 {
     vfloat32m1_t t0, t1, t2;
     t0 = __riscv_vfmul_vv_f32m1 (s, da, vl);
@@ -72,11 +72,11 @@ rvv_blend_screen (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_multiply (const vfloat32m1_t sa,
-		    const vfloat32m1_t s,
-		    const vfloat32m1_t da,
-		    const vfloat32m1_t d,
-		    size_t             vl)
+rvv_blend_multiply_float (const vfloat32m1_t sa,
+			  const vfloat32m1_t s,
+			  const vfloat32m1_t da,
+			  const vfloat32m1_t d,
+			  size_t             vl)
 {
     return __riscv_vfmul_vv_f32m1 (s, d, vl);
 }
@@ -105,11 +105,11 @@ rvv_blend_multiply (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_overlay (const vfloat32m1_t sa,
-		   const vfloat32m1_t s,
-		   const vfloat32m1_t da,
-		   const vfloat32m1_t d,
-		   size_t             vl)
+rvv_blend_overlay_float (const vfloat32m1_t sa,
+			 const vfloat32m1_t s,
+			 const vfloat32m1_t da,
+			 const vfloat32m1_t d,
+			 size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4, f0, f1, f2;
     vbool32_t    vb;
@@ -134,11 +134,11 @@ rvv_blend_overlay (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_darken (const vfloat32m1_t sa,
-		  const vfloat32m1_t s,
-		  const vfloat32m1_t da,
-		  const vfloat32m1_t d,
-		  size_t             vl)
+rvv_blend_darken_float (const vfloat32m1_t sa,
+			const vfloat32m1_t s,
+			const vfloat32m1_t da,
+			const vfloat32m1_t d,
+			size_t             vl)
 {
     vfloat32m1_t ss, dd;
     vbool32_t    vb;
@@ -157,11 +157,11 @@ rvv_blend_darken (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_lighten (const vfloat32m1_t sa,
-		   const vfloat32m1_t s,
-		   const vfloat32m1_t da,
-		   const vfloat32m1_t d,
-		   size_t             vl)
+rvv_blend_lighten_float (const vfloat32m1_t sa,
+			 const vfloat32m1_t s,
+			 const vfloat32m1_t da,
+			 const vfloat32m1_t d,
+			 size_t             vl)
 {
     vfloat32m1_t ss, dd;
     vbool32_t    vb;
@@ -191,11 +191,11 @@ rvv_blend_lighten (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_color_dodge (const vfloat32m1_t sa,
-		       const vfloat32m1_t s,
-		       const vfloat32m1_t da,
-		       const vfloat32m1_t d,
-		       size_t             vl)
+rvv_blend_color_dodge_float (const vfloat32m1_t sa,
+			     const vfloat32m1_t s,
+			     const vfloat32m1_t da,
+			     const vfloat32m1_t d,
+			     size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4;
     vbool32_t    is_d_zero, vb, is_t0_non_zero;
@@ -241,11 +241,11 @@ rvv_blend_color_dodge (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_color_burn (const vfloat32m1_t sa,
-		      const vfloat32m1_t s,
-		      const vfloat32m1_t da,
-		      const vfloat32m1_t d,
-		      size_t             vl)
+rvv_blend_color_burn_float (const vfloat32m1_t sa,
+			    const vfloat32m1_t s,
+			    const vfloat32m1_t da,
+			    const vfloat32m1_t d,
+			    size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4, t5, t6, t7;
     vbool32_t    is_d_ge_da, is_s_zero, vb;
@@ -289,11 +289,11 @@ rvv_blend_color_burn (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_hard_light (const vfloat32m1_t sa,
-		      const vfloat32m1_t s,
-		      const vfloat32m1_t da,
-		      const vfloat32m1_t d,
-		      size_t             vl)
+rvv_blend_hard_light_float (const vfloat32m1_t sa,
+			    const vfloat32m1_t s,
+			    const vfloat32m1_t da,
+			    const vfloat32m1_t d,
+			    size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4;
     vbool32_t    vb;
@@ -328,11 +328,11 @@ rvv_blend_hard_light (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_soft_light (const vfloat32m1_t sa,
-		      const vfloat32m1_t s,
-		      const vfloat32m1_t da,
-		      const vfloat32m1_t d,
-		      size_t             vl)
+rvv_blend_soft_light_float (const vfloat32m1_t sa,
+			    const vfloat32m1_t s,
+			    const vfloat32m1_t da,
+			    const vfloat32m1_t d,
+			    size_t             vl)
 {
     vfloat32m1_t t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13;
     vbool32_t    is_sa_lt_2s, is_da_ls_4d, is_da_non_zero;
@@ -396,11 +396,11 @@ rvv_blend_soft_light (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_difference (const vfloat32m1_t sa,
-		      const vfloat32m1_t s,
-		      const vfloat32m1_t da,
-		      const vfloat32m1_t d,
-		      size_t             vl)
+rvv_blend_difference_float (const vfloat32m1_t sa,
+			    const vfloat32m1_t s,
+			    const vfloat32m1_t da,
+			    const vfloat32m1_t d,
+			    size_t             vl)
 {
     vfloat32m1_t dsa, sda;
     vbool32_t    vb;
@@ -421,11 +421,11 @@ rvv_blend_difference (const vfloat32m1_t sa,
  */
 
 static force_inline vfloat32m1_t
-rvv_blend_exclusion (const vfloat32m1_t sa,
-		     const vfloat32m1_t s,
-		     const vfloat32m1_t da,
-		     const vfloat32m1_t d,
-		     size_t             vl)
+rvv_blend_exclusion_float (const vfloat32m1_t sa,
+			   const vfloat32m1_t s,
+			   const vfloat32m1_t da,
+			   const vfloat32m1_t d,
+			   size_t             vl)
 {
     vfloat32m1_t t0, t1;
     t0 = __riscv_vfmul_vv_f32m1 (__riscv_vfadd_vv_f32m1 (d, d, vl), s, vl);
@@ -441,13 +441,13 @@ typedef vfloat32m1_t (*rvv_combine_channel_float_t) (const vfloat32m1_t sa,
 						     size_t             vl);
 
 static force_inline void
-rvv_combine_inner (pixman_bool_t               component,
-		   float                      *dest,
-		   const float                *src,
-		   const float                *mask,
-		   int                         n_pixels,
-		   rvv_combine_channel_float_t combine_a,
-		   rvv_combine_channel_float_t combine_c)
+rvv_combine_inner_float (pixman_bool_t               component,
+			 float                      *dest,
+			 const float                *src,
+			 const float                *mask,
+			 int                         n_pixels,
+			 rvv_combine_channel_float_t combine_a,
+			 rvv_combine_channel_float_t combine_c)
 {
     float *__restrict__ pd       = dest;
     const float *__restrict__ ps = src;
@@ -617,8 +617,8 @@ rvv_combine_inner (pixman_bool_t               component,
 	pixman_implementation_t *imp, pixman_op_t op, float *dest,             \
 	const float *src, const float *mask, int n_pixels)                     \
     {                                                                          \
-	rvv_combine_inner (component, dest, src, mask, n_pixels, combine_a,    \
-			   combine_c);                                         \
+	rvv_combine_inner_float (component, dest, src, mask, n_pixels,         \
+				 combine_a, combine_c);                        \
     }
 
 #define RVV_MAKE_COMBINERS(name, combine_a, combine_c)                         \
@@ -626,10 +626,10 @@ rvv_combine_inner (pixman_bool_t               component,
     RVV_MAKE_COMBINER (name##_u, FALSE, combine_a, combine_c)
 
 static force_inline vfloat32m1_t
-rvv_get_factor (combine_factor_t factor,
-		vfloat32m1_t     sa,
-		vfloat32m1_t     da,
-		size_t           vl)
+rvv_get_factor_float (combine_factor_t factor,
+		      vfloat32m1_t     sa,
+		      vfloat32m1_t     da,
+		      size_t           vl)
 {
     vfloat32m1_t vone  = __riscv_vfmv_v_f_f32m1 (1.0f, vl);
     vfloat32m1_t vzero = __riscv_vfmv_v_f_f32m1 (0.0f, vl);
@@ -751,12 +751,12 @@ rvv_get_factor (combine_factor_t factor,
 }
 
 #define RVV_MAKE_PD_COMBINERS(name, a, b)                                      \
-    static vfloat32m1_t force_inline rvv_pd_combine_##name (                   \
+    static vfloat32m1_t force_inline rvv_pd_combine_##name##_float (           \
 	vfloat32m1_t sa, vfloat32m1_t s, vfloat32m1_t da, vfloat32m1_t d,      \
 	size_t vl)                                                             \
     {                                                                          \
-	const vfloat32m1_t fa = rvv_get_factor (a, sa, da, vl);                \
-	const vfloat32m1_t fb = rvv_get_factor (b, sa, da, vl);                \
+	const vfloat32m1_t fa = rvv_get_factor_float (a, sa, da, vl);          \
+	const vfloat32m1_t fb = rvv_get_factor_float (b, sa, da, vl);          \
 	vfloat32m1_t       t0 = __riscv_vfadd_vv_f32m1 (                       \
             __riscv_vfmul_vv_f32m1 (s, fa, vl),                          \
             __riscv_vfmul_vv_f32m1 (d, fb, vl), vl);                     \
@@ -764,7 +764,8 @@ rvv_get_factor (combine_factor_t factor,
 				       vl);                                    \
     }                                                                          \
                                                                                \
-    RVV_MAKE_COMBINERS (name, rvv_pd_combine_##name, rvv_pd_combine_##name)
+    RVV_MAKE_COMBINERS (name, rvv_pd_combine_##name##_float,                   \
+			rvv_pd_combine_##name##_float)
 
 RVV_MAKE_PD_COMBINERS (clear, ZERO, ZERO)
 RVV_MAKE_PD_COMBINERS (src, ONE, ZERO)
@@ -833,8 +834,8 @@ RVV_MAKE_PD_COMBINERS (conjoint_xor, ONE_MINUS_DA_OVER_SA, ONE_MINUS_SA_OVER_DA)
 		vl),                                                           \
 	    -1.0f, vl);                                                        \
                                                                                \
-	return __riscv_vfadd_vv_f32m1 (f, rvv_blend_##name (sa, s, da, d, vl), \
-				       vl);                                    \
+	return __riscv_vfadd_vv_f32m1 (                                        \
+	    f, rvv_blend_##name##_float (sa, s, da, d, vl), vl);               \
     }                                                                          \
                                                                                \
     RVV_MAKE_COMBINERS (name, rvv_combine_##name##_a, rvv_combine_##name##_c)

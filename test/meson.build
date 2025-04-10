@@ -51,6 +51,7 @@ tests = [
   'scaling-test',
   'composite',
   'tolerance-test',
+  'neg-stride-test',
 ]
 
 # Remove/update this once thread-test.c supports threading methods

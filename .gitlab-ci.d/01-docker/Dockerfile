@@ -145,17 +145,6 @@ RUN dpkg --add-architecture i386 \
     && ${APT_CLEANUP} \
     && ${WINE_BOOT}
 
-FROM windows-llvm-base AS windows-amd64
-ENV WINEPATH=/opt/llvm/x86_64-w64-mingw32/bin \
-    WINEARCH=win64
-RUN ${APT_UPDATE} \
-    && ${APT_INSTALL} \
-        libwine \
-        wine \
-        wine64 \
-    && ${APT_CLEANUP} \
-    && ${WINE_BOOT}
-
 # Dependencies needed both for Wine build and the final image.
 FROM windows-llvm-base AS windows-wine-build-base
 RUN ${APT_UPDATE} \
@@ -193,6 +182,12 @@ RUN cd wine \
     && ./configure --enable-win64 --disable-tests --without-unwind --prefix=/opt/wine \
     && make -j`nproc` \
     && make install
+
+FROM windows-llvm-base AS windows-amd64
+COPY --from=windows-wine-build /opt/wine /opt/wine
+ENV PATH=/opt/wine/bin:${PATH} \
+    WINEPATH=/opt/llvm/x86_64-w64-mingw32/bin
+RUN ${WINE_BOOT}
 
 FROM windows-wine-build-base AS windows-arm64-v8
 COPY --from=windows-wine-build /opt/wine /opt/wine

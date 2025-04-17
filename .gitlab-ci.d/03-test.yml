@@ -108,6 +108,7 @@ include:
         - "sse2 ssse3"
         - "mmx ssse3"
         - "mmx sse2"
+      retry: 2
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: windows-amd64
@@ -121,3 +122,4 @@ include:
       target: windows-arm64-v8
       toolchain: [llvm]
       runner_tags: [aarch64]
+      retry: 2

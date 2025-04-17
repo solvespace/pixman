@@ -37,23 +37,18 @@ include:
     inputs:
       target: linux-arm-v5
       toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/107
-      qemu_cpu: [arm1136]
       pixman_disable: ["arm-neon"] # Test only arm-simd.
       timeout: 3h
       test_timeout_multiplier: 40
-      runner_tag: kvm-aarch64
-      docker_job: docker:kvm-aarch64
+      runner_tags: [aarch64]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm-v7
-      qemu_cpu: [max]
-      runner_tag: kvm-aarch64
-      docker_job: docker:kvm-aarch64
+      runner_tags: [aarch64]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-arm64-v8
-      runner_tag: kvm-aarch64
-      docker_job: docker:kvm-aarch64
+      runner_tags: [aarch64]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mips
@@ -68,12 +63,14 @@ include:
       target: linux-mips64le
       toolchain: [gnu]  # TODO: https://gitlab.freedesktop.org/pixman/pixman/-/issues/108
       qemu_cpu: [Loongson-3A4000]
+      runner_tags: [kvm]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-mipsel
       toolchain: [gnu]  # TODO: Add llvm once the build is fixed.
       qemu_cpu: [74Kf]
       timeout: 2h
+      runner_tags: [kvm]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-ppc
@@ -90,6 +87,7 @@ include:
     inputs:
       target: linux-ppc64le
       qemu_cpu: [power10]
+      runner_tags: [kvm]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: linux-riscv64
@@ -101,6 +99,7 @@ include:
         - rv64,v=true,vext_spec=v1.0,vlen=256,elen=64
         - rv64,v=true,vext_spec=v1.0,vlen=512,elen=64
         - rv64,v=true,vext_spec=v1.0,vlen=1024,elen=64
+      runner_tags: [kvm]
   - local: .gitlab-ci.d/templates/test.yml
     inputs:
       target: windows-686
@@ -121,5 +120,4 @@ include:
     inputs:
       target: windows-arm64-v8
       toolchain: [llvm]
-      runner_tag: kvm-aarch64
-      docker_job: docker:kvm-aarch64
+      runner_tags: [aarch64]

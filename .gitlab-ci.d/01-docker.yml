@@ -7,7 +7,8 @@
 include:
   - local: .gitlab-ci.d/templates/docker.yml
     inputs:
-      runner_tag: kvm-aarch64
+      runner_tags: [aarch64]
+      job_name_suffix: ":aarch64"
       targets:
         - linux-arm-v5
         - linux-arm-v7
@@ -15,16 +16,20 @@ include:
         - windows-arm64-v8
   - local: .gitlab-ci.d/templates/docker.yml
     inputs:
-      runner_tag: kvm
+      runner_tags: [kvm]
+      job_name_suffix: ":kvm"
+      targets:
+        - linux-mips64le
+        - linux-mipsel
+        - linux-ppc64le
+        - linux-riscv64
+  - local: .gitlab-ci.d/templates/docker.yml
+    inputs:
       targets:
         - linux-386
         - linux-amd64
         - linux-mips
-        - linux-mips64le
-        - linux-mipsel
         - linux-ppc
         - linux-ppc64
-        - linux-ppc64le
-        - linux-riscv64
         - windows-686
         - windows-amd64

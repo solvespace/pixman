@@ -66,28 +66,20 @@ spec:
         `allow_failure`.
       type: number
       default: 1
-    runner_tag:
-      description: GitLab runner tag for this job.
-      default: kvm
-    docker_job:
-      description: Docker image build job name.
-      default: docker:kvm
+    runner_tags:
+      description: List of GitLab runner tags for this job.
+      type: array
+      default: []
 ---
 
 "$[[ inputs.job_name_prefix ]]test:$[[ inputs.target ]]$[[ inputs.job_name_suffix ]]":
   extends: .target:all
-  tags:
-    - $[[ inputs.runner_tag | expand_vars ]]
+  tags: $[[ inputs.runner_tags ]]
   stage: test
   allow_failure: $[[ inputs.allow_failure ]]
   retry: $[[ inputs.retry ]]
   timeout: $[[ inputs.timeout ]]
   needs:
-    - job: $[[ inputs.docker_job | expand_vars ]]
-      optional: true
-      parallel:
-        matrix:
-          - TARGET: $[[ inputs.target ]]
     - job: build:$[[ inputs.target ]]
       parallel:
         matrix:

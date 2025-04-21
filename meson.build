@@ -372,6 +372,10 @@ if not use_rvv.disabled()
   if host_machine.cpu_family() == 'riscv64'
     if cc.compiles('''
         #include <riscv_vector.h>
+        #include <asm/hwcap.h>
+        #ifndef COMPAT_HWCAP_ISA_V /* added in linux-6.5 */
+        #error "COMPAT_HWCAP_ISA_V is not available"
+        #endif
         int main() {
             vfloat32m1_t tmp1; /* added in gcc-13 */
             vfloat32m1x4_t tmp2; /* added in gcc-14 */

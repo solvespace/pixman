@@ -1193,6 +1193,10 @@ pixman_bool_t   pixman_image_set_clip_region32       (pixman_image_t            
 						      const pixman_region32_t            *region);
 
 PIXMAN_API
+pixman_bool_t   pixman_image_set_clip_region64f      (pixman_image_t               *image,
+						      const pixman_region64f_t           *region);
+
+PIXMAN_API
 void		pixman_image_set_has_client_clip     (pixman_image_t               *image,
 						      pixman_bool_t		    clien_clip);
 
@@ -1347,6 +1351,20 @@ void          pixman_image_composite32        (pixman_op_t        op,
 					       int32_t            dest_y,
 					       int32_t            width,
 					       int32_t            height);
+
+PIXMAN_API
+void          pixman_image_composite64f       (pixman_op_t        op,
+					       pixman_image_t    *src,
+					       pixman_image_t    *mask,
+					       pixman_image_t    *dest,
+					       double             src_x,
+					       double             src_y,
+					       double             mask_x,
+					       double             mask_y,
+					       double             dest_x,
+					       double             dest_y,
+					       double             width,
+					       double             height);
 
 /* Executive Summary: This function is a no-op that only exists
  * for historical reasons.

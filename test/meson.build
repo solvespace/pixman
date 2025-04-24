@@ -30,6 +30,7 @@ tests = [
   'radial-invalid',
   'pdf-op-test',
   'region-test',
+  'region-fractional-test',
   'combiner-test',
   'scaling-crash-test',
   'alpha-loop',

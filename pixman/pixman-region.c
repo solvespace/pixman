@@ -2574,6 +2574,50 @@ PREFIX (_contains_point) (const region_type_t * region,
 }
 
 PIXMAN_EXPORT int
+PREFIX (_contains_pointf) (const region_type_t * region,
+                           double x, double y,
+                           box_type_t * box)
+{
+    box_type_t *pbox, *pbox_end;
+    int numRects;
+
+    GOOD (region);
+    numRects = PIXREGION_NUMRECTS (region);
+
+    if (!numRects || !INBOX (&region->extents, x, y))
+	return(FALSE);
+
+    if (numRects == 1)
+    {
+        if (box)
+	    *box = region->extents;
+
+        return(TRUE);
+    }
+
+    pbox = PIXREGION_BOXPTR (region);
+    pbox_end = pbox + numRects;
+
+    pbox = find_box_for_y (pbox, pbox_end, y);
+
+    for (;pbox != pbox_end; pbox++)
+    {
+        if ((y < pbox->y1) || (x < pbox->x1))
+	    break;              /* missed it */
+
+        if (x >= pbox->x2)
+	    continue;           /* not there yet */
+
+        if (box)
+	    *box = *pbox;
+
+        return(TRUE);
+    }
+
+    return(FALSE);
+}
+
+PIXMAN_EXPORT int
 PREFIX (_empty) (const region_type_t * region)
 {
     GOOD (region);

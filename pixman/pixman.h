@@ -894,6 +894,12 @@ pixman_bool_t           pixman_region64f_contains_point    (const pixman_region6
 							    pixman_box64f_t          *box);
 
 PIXMAN_API
+pixman_bool_t           pixman_region64f_contains_pointf   (const pixman_region64f_t *region,
+							    double                    x,
+							    double                    y,
+							    pixman_box64f_t          *box);
+
+PIXMAN_API
 pixman_region_overlap_t pixman_region64f_contains_rectangle(const pixman_region64f_t *region,
 							    const pixman_box64f_t    *prect);
 

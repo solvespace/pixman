@@ -21,7 +21,7 @@
 project(
   'pixman',
   ['c'],
-  version : '0.46.1',
+  version : '0.46.2',
   license : 'MIT',
   meson_version : '>= 1.3.0',
   default_options : ['c_std=gnu99,c99', 'buildtype=debugoptimized'],

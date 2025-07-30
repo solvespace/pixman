@@ -31,7 +31,7 @@
 
 #if defined(__linux__)
 #include <asm/hwprobe.h>
-#include <sys/auxv.h>
+#include <asm/unistd.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
@@ -39,7 +39,7 @@ static int
 is_rvv_1_0_available ()
 {
     struct riscv_hwprobe pair = {RISCV_HWPROBE_KEY_IMA_EXT_0, 0};
-    if (sys_riscv_hwprobe (&pair, 1, 0, 0, 0) < 0)
+    if (syscall (__NR_riscv_hwprobe, &pair, 1, 0, 0, 0) < 0)
     {
 	return 0;
     }

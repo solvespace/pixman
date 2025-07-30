@@ -374,8 +374,8 @@ if not use_rvv.disabled()
         #include <riscv_vector.h>
         #include <asm/hwprobe.h>
         #include <linux/version.h>
-        #include <sys/auxv.h>
         #include <sys/syscall.h>
+        #include <asm/unistd.h>
         #include <unistd.h>
 
         #if defined(__riscv_v) && __riscv_v < 1000000
@@ -384,9 +384,10 @@ if not use_rvv.disabled()
         #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0)
         #error "Minimum supported kernel is 6.5.0"
         #endif
+
         int main() {
             struct riscv_hwprobe pair = {RISCV_HWPROBE_KEY_IMA_EXT_0, 0};
-            long result = sys_riscv_hwprobe (&pair, 1, 0, 0, 0);
+            long result = syscall (__NR_riscv_hwprobe, &pair, 1, 0, 0, 0);
             vfloat32m1_t tmp1; /* added in gcc-13 */
             vfloat32m1x4_t tmp2; /* added in gcc-14 */
             return 0;

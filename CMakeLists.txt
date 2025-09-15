@@ -285,6 +285,34 @@ main ()
     USE_MIPS_DSPR2 "Enable MIPS DSPr2 fast paths"
     MSVC OFF)
 
+
+set(RVV_FLAGS "-march=rv64gcv1p0")
+check_target_feature(
+"        #include <riscv_vector.h>
+        #include <asm/hwprobe.h>
+        #include <linux/version.h>
+        #include <sys/auxv.h>
+        #include <sys/syscall.h>
+        #include <unistd.h>
+
+        #if defined(__riscv_v) && __riscv_v < 1000000
+        #error "Minimum supported RVV is 1.0"
+        #endif
+        #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0)
+        #error "Minimum supported kernel is 6.5.0"
+        #endif
+        int main() {
+            struct riscv_hwprobe pair = {RISCV_HWPROBE_KEY_IMA_EXT_0, 0};
+            long result = sys_riscv_hwprobe (&pair, 1, 0, 0, 0);
+            vfloat32m1_t tmp1; /* added in gcc-13 */
+            vfloat32m1x4_t tmp2; /* added in gcc-14 */
+            return 0;
+        }
+"
+    "${RVV_FLAGS}"
+    USE_RVV "Enable RISC-V Vector Intrinsic Support"
+    MSVC OFF)
+
 check_c_source_compiles(
 "int main () {
     /* Most modern architectures have a NOP instruction, so this is a fairly generic test. */

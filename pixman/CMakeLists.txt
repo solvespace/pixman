@@ -25,6 +25,8 @@ set(SOURCES
     pixman-radial-gradient.c
     pixman-region16.c
     pixman-region32.c
+    pixman-region64f.c
+    pixman-riscv.c
     pixman-solid-fill.c
     pixman-timer.c
     pixman-trap.c
@@ -113,6 +115,11 @@ if(USE_MIPS_DSPR2)
     list(APPEND HEADERS
         pixman-mips-dspr2.h
         pixman-mips-dspr2-asm.h)
+endif()
+
+if(USE_RVV)
+    list(APPEND SOURCES
+        pixman-rvv.c)
 endif()
 
 if(USE_LOONGSON_MMI)

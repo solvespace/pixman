@@ -13,14 +13,15 @@ include(CheckCFlag)
 include(CheckTargetFeature)
 
 # Versioning
-file(READ configure.ac configure_ac)
-string(REGEX REPLACE ".*m4_define\\(\\[pixman_major\\], ([0-9]+)\\).*" "\\1"
-                     PIXMAN_VERSION_MAJOR ${configure_ac})
-string(REGEX REPLACE ".*m4_define\\(\\[pixman_minor\\], ([0-9]+)\\).*" "\\1"
-                     PIXMAN_VERSION_MINOR ${configure_ac})
-string(REGEX REPLACE ".*m4_define\\(\\[pixman_micro\\], ([0-9]+)\\).*" "\\1"
-                     PIXMAN_VERSION_MICRO ${configure_ac})
-set(PIXMAN_VERSION "${PIXMAN_VERSION_MAJOR}.${PIXMAN_VERSION_MINOR}.${PIXMAN_VERSION_MICRO}")
+file(READ meson.build meson_build)
+string(REGEX REPLACE ".*version : '([0-9]+\\.[0-9]+\\.[0-9]+)'.*" "\\1"
+                     PIXMAN_VERSION ${meson_build})
+string(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1"
+                     PIXMAN_VERSION_MAJOR ${PIXMAN_VERSION})
+string(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1"
+                     PIXMAN_VERSION_MINOR ${PIXMAN_VERSION})
+string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1"
+                     PIXMAN_VERSION_MICRO ${PIXMAN_VERSION})
 message(STATUS "Building pixman version ${PIXMAN_VERSION}")
 
 # Building
@@ -371,7 +372,7 @@ set(HAVE_LIBPNG ${PNG_FOUND})
 add_definitions(-DHAVE_CONFIG_H)
 configure_file(
     cmake/config.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/pixman/config.h)
+    ${CMAKE_CURRENT_BINARY_DIR}/pixman/pixman-config.h)
 
 # Components
 add_subdirectory(pixman)
